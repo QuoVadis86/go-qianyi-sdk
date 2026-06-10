@@ -340,20 +340,35 @@ type SkuInventory struct {
 
 // AsnOrder represents an inbound order (ASN) in QERP.
 type AsnOrder struct {
-	AsnNumber            string        `json:"asnNumber"`
-	BusinessNumber       string        `json:"businessNumber,omitempty"`
-	CustomNumber         string        `json:"customNumber,omitempty"`
-	TrackNumber          string        `json:"trackNumber,omitempty"`
-	WarehouseName        string        `json:"warehouseName"`
-	Type                 string        `json:"type"`
-	Status               string        `json:"status"`
-	Remark               string        `json:"remark,omitempty"`
-	CreateTime           string        `json:"createTime"`
-	UpdateTime           string        `json:"updateTime,omitempty"`
-	StockInTime          string        `json:"stockInTime,omitempty"`
-	FinishTime           string        `json:"finishTime,omitempty"`
-	PurchasePriceCurrency string       `json:"purchasePriceCurrency,omitempty"`
-	AsnSkuVOList         []AsnSkuItem  `json:"asnSkuVOList,omitempty"`
+	AsnNumber              string        `json:"asnNumber"`
+	BusinessNumber         string        `json:"businessNumber,omitempty"`
+	CustomNumber           string        `json:"customNumber,omitempty"`
+	TrackNumber            string        `json:"trackNumber,omitempty"`
+	WarehouseName          string        `json:"warehouseName"`
+	Type                   string        `json:"type"`
+	Status                 string        `json:"status"`
+	Remark                 string        `json:"remark,omitempty"`
+	CreateTime             string        `json:"createTime"`
+	UpdateTime             string        `json:"updateTime,omitempty"`
+	StockInTime            string        `json:"stockInTime,omitempty"`
+	FinishTime             string        `json:"finishTime,omitempty"`
+	LogisticsName          string        `json:"logisticsName,omitempty"`
+	ContainerNumber        string        `json:"containerNumber,omitempty"`
+	PurchasePriceCurrency  string        `json:"purchasePriceCurrency,omitempty"`
+	FirstLegPriceCurrency  string        `json:"firstLegPriceCurrency,omitempty"`
+	TransferPriceCurrency  string        `json:"transferPriceCurrency,omitempty"`
+	AsnSkuVOList           []AsnSkuItem  `json:"asnSkuVOList,omitempty"`
+	AsnCustomFieldValueList []CustomField `json:"asnCustomFieldValueVOList,omitempty"`
+	Tag                    *AsnTag       `json:"tag,omitempty"`
+}
+
+// AsnTag represents send status flags on an inbound order.
+type AsnTag struct {
+	SendWms         int `json:"sendWms,omitempty"`
+	SendFailed      int `json:"sendFailed,omitempty"`
+	ReceiveException int `json:"receiveException,omitempty"`
+	BoxedNeedSend   int `json:"boxedNeedSend,omitempty"`
+	Overcharge      int `json:"overcharge,omitempty"`
 }
 
 // AsnSkuItem represents a SKU line within an inbound order.
@@ -367,6 +382,8 @@ type AsnSkuItem struct {
 	ReceiveQuantity int64  `json:"receiveQuantity,omitempty"`
 	GoodNum        int64   `json:"goodNum,omitempty"`
 	DamageNum      int64   `json:"damageNum,omitempty"`
+	SkuNotes       string  `json:"skuNotes,omitempty"`
+	PerBoxQuantity int     `json:"perBoxQuantity,omitempty"`
 }
 
 // OdoOrder represents an outbound delivery order in QERP.
