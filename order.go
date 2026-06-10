@@ -2,14 +2,17 @@ package qianyi
 
 import "encoding/json"
 
+// OrderService provides access to sales order API operations.
 type OrderService struct {
 	client *Client
 }
 
+// NewOrderService creates a new OrderService.
 func NewOrderService(client *Client) *OrderService {
 	return &OrderService{client: client}
 }
 
+// CreateOrderParams holds the parameters for creating a sales order.
 type CreateOrderParams struct {
 	Shop              string     `json:"shop"`
 	OnlineOrderNumber string     `json:"onlineOrderNumber"`
@@ -26,6 +29,7 @@ type CreateOrderParams struct {
 	TrackingNumber    string     `json:"trackingNumber,omitempty"`
 }
 
+// Create creates a new sales order in QERP.
 func (s *OrderService) Create(params *CreateOrderParams) (*Order, error) {
 	biz, _ := json.Marshal(params)
 	var order Order
@@ -39,27 +43,20 @@ func (s *OrderService) Create(params *CreateOrderParams) (*Order, error) {
 	return &order, nil
 }
 
+// Cancel cancels a sales order by online order number and shop name.
 func (s *OrderService) Cancel(onlineOrderNumber, shop string) error {
-	params := map[string]any{
-		"onlineOrderNumber": onlineOrderNumber,
-		"shop":             shop,
-	}
+	params := map[string]any{"onlineOrderNumber": onlineOrderNumber, "shop": shop}
 	biz, _ := json.Marshal(params)
 	w := &ResponseWrapper{}
-	if err := s.client.Do("CLOSE_SALES_ORDER", string(biz), w); err != nil {
-		return err
-	}
-	if w.HasError() {
-		return &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return nil
+	return s.client.Do("CLOSE_SALES_ORDER", string(biz), w)
 }
 
+// OrderQueryParams holds parameters for querying sales orders.
 type OrderQueryParams struct {
-	Page     int    `json:"page"`
-	PageSize int    `json:"pageSize"`
-	Status   string `json:"status,omitempty"`
-	Shop     string `json:"shop,omitempty"`
+	Page              int    `json:"page"`
+	PageSize          int    `json:"pageSize"`
+	Status            string `json:"status,omitempty"`
+	Shop              string `json:"shop,omitempty"`
 	OrderNumber       string `json:"orderNumber,omitempty"`
 	OnlineOrderNumber string `json:"onlineOrderNumber,omitempty"`
 	FromPayTime       string `json:"fromPayTime,omitempty"`
@@ -68,6 +65,7 @@ type OrderQueryParams struct {
 	UpdateTimeTo      string `json:"updateTimeTo,omitempty"`
 }
 
+// QueryList retrieves a paginated list of sales orders with optional filters.
 func (s *OrderService) QueryList(params *OrderQueryParams) ([]Order, int, error) {
 	biz, _ := json.Marshal(params)
 	var orders []Order
@@ -81,11 +79,9 @@ func (s *OrderService) QueryList(params *OrderQueryParams) ([]Order, int, error)
 	return orders, w.BizContent.Total, nil
 }
 
-func (s *OrderService) QueryNumberList(status, shop string, fromPayTime, toPayTime string, page, pageSize int) ([]string, int, error) {
-	params := map[string]any{
-		"page":     page,
-		"pageSize": pageSize,
-	}
+// QueryNumberList retrieves a paginated list of sales order numbers.
+func (s *OrderService) QueryNumberList(status, shop, fromPayTime, toPayTime string, page, pageSize int) ([]string, int, error) {
+	params := map[string]any{"page": page, "pageSize": pageSize}
 	if status != "" {
 		params["status"] = status
 	}

@@ -1,5 +1,6 @@
 package qianyi
 
+// SDK is the main entry point for the QERP Open Platform SDK.
 type SDK struct {
 	Client        *Client
 	Shop          *ShopService
@@ -17,6 +18,7 @@ type SDK struct {
 	CustomerField *CustomerFieldService
 }
 
+// NewSDK creates a new QERP SDK with the given appId and appSecret.
 func NewSDK(appID, appSecret string, opts ...ClientOption) *SDK {
 	c := NewClient(appID, appSecret, opts...)
 	return &SDK{
@@ -37,6 +39,7 @@ func NewSDK(appID, appSecret string, opts ...ClientOption) *SDK {
 	}
 }
 
+// TestEnv switches the SDK to the QERP test environment.
 func (s *SDK) TestEnv() {
 	s.Client.BaseURL = "https://gerp-test1.800best.com"
 }

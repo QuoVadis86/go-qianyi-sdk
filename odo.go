@@ -2,19 +2,19 @@ package qianyi
 
 import "encoding/json"
 
+// OdoService provides access to outbound delivery order (ODO) API operations.
 type OdoService struct {
 	client *Client
 }
 
+// NewOdoService creates a new OdoService.
 func NewOdoService(client *Client) *OdoService {
 	return &OdoService{client: client}
 }
 
+// QueryList retrieves a paginated list of outbound delivery orders.
 func (s *OdoService) QueryList(page, pageSize int, status, warehouse string) ([]any, int, error) {
-	params := map[string]any{
-		"page":     page,
-		"pageSize": pageSize,
-	}
+	params := map[string]any{"page": page, "pageSize": pageSize}
 	if status != "" {
 		params["status"] = status
 	}
@@ -33,15 +33,10 @@ func (s *OdoService) QueryList(page, pageSize int, status, warehouse string) ([]
 	return list, w.BizContent.Total, nil
 }
 
+// Close closes an outbound delivery order by ODO number.
 func (s *OdoService) Close(odoNumber string) error {
 	params := map[string]any{"odoNumber": odoNumber}
 	biz, _ := json.Marshal(params)
 	w := &ResponseWrapper{}
-	if err := s.client.Do("CLOSE_ODO", string(biz), w); err != nil {
-		return err
-	}
-	if w.HasError() {
-		return &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return nil
+	return s.client.Do("CLOSE_ODO", string(biz), w)
 }

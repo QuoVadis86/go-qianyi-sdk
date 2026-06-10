@@ -5,18 +5,26 @@ import (
 	"fmt"
 )
 
+// BaseResponse is the standard response envelope for all QERP API responses.
 type BaseResponse struct {
-	ErrorCode string `json:"errorCode"`
-	ErrorMsg  string `json:"errorMsg"`
-	State     string `json:"state"`
+	ErrorCode  string `json:"errorCode"`
+	ErrorMsg   string `json:"errorMsg"`
+	State      string `json:"state"`
 	BizContent string `json:"bizContent"`
-	RequestID string `json:"requestId"`
+	RequestID  string `json:"requestId"`
 }
 
+// IsSuccess returns true when the API call succeeded (state=success, no error).
 func (r *BaseResponse) IsSuccess() bool {
 	return r.State == "success" && r.ErrorCode == ""
 }
 
+// HasError returns true when the API returned an error or failure state.
+func (r *BaseResponse) HasError() bool {
+	return r.ErrorCode != "" || r.State == "failure"
+}
+
+// BizContent holds the parsed business data from a QERP API response.
 type BizContent struct {
 	State      string          `json:"state"`
 	NotSuccess bool            `json:"notSuccess,omitempty"`
@@ -24,6 +32,7 @@ type BizContent struct {
 	Result     json.RawMessage `json:"result,omitempty"`
 }
 
+// ParseBizContent unmarshals the BizContent JSON string into BizContent struct.
 func (r *BaseResponse) ParseBizContent() (*BizContent, error) {
 	bc := &BizContent{}
 	if r.BizContent == "" {
@@ -35,10 +44,7 @@ func (r *BaseResponse) ParseBizContent() (*BizContent, error) {
 	return bc, nil
 }
 
-func (r *BaseResponse) HasError() bool {
-	return r.ErrorCode != "" || r.State == "failure"
-}
-
+// APIError represents a QERP API business error.
 type APIError struct {
 	ErrorCode string
 	Message   string
@@ -49,12 +55,18 @@ func (e *APIError) Error() string {
 	return fmt.Sprintf("qianyi api error [%s]: %s (request_id: %s)", e.ErrorCode, e.Message, e.RequestID)
 }
 
+// ResponseWrapper combines the base response with parsed bizContent and typed result.
+type ResponseWrapper struct {
+	BaseResponse
+	BizContent *BizContent
+	Result     any
+}
+
 func parseResponse(body []byte, result any) error {
 	var base BaseResponse
 	if err := json.Unmarshal(body, &base); err != nil {
 		return fmt.Errorf("unmarshal response: %w (body: %s)", err, truncate(string(body), 500))
 	}
-
 	if result != nil {
 		if r, ok := result.(*BaseResponse); ok {
 			*r = base
@@ -75,18 +87,10 @@ func parseResponse(body []byte, result any) error {
 			return nil
 		}
 	}
-
 	if base.HasError() {
 		return &APIError{ErrorCode: base.ErrorCode, Message: base.ErrorMsg, RequestID: base.RequestID}
 	}
-
 	return nil
-}
-
-type ResponseWrapper struct {
-	BaseResponse
-	BizContent *BizContent
-	Result     any
 }
 
 func truncate(s string, n int) string {
