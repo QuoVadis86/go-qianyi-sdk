@@ -248,6 +248,18 @@ func (s *InventoryService) QueryStorageLocInventory(warehouse, storageLocation s
 	return list, nil
 }
 
+// BatchInventoryQueryParams holds parameters for batch inventory queries.
+type BatchInventoryQueryParams struct {
+	ReceiveTimeFrom string `json:"receiveTimeFrom"`
+	ReceiveTimeTo   string `json:"receiveTimeTo"`
+	Page            int    `json:"page"`
+	PageSize        int    `json:"pageSize"`
+	NumberParam     string `json:"numberParam,omitempty"`
+	SkuParam        string `json:"skuParam,omitempty"`
+	WarehouseName   string `json:"warehouseName,omitempty"`
+	AsnType         string `json:"asnType,omitempty"`
+}
+
 // BatchInventory represents a batch inventory record.
 type BatchInventory struct {
 	Sku             string `json:"sku,omitempty"`
@@ -261,8 +273,7 @@ type BatchInventory struct {
 }
 
 // QueryBatchInventoryList queries batch-level inventory records.
-func (s *InventoryService) QueryBatchInventoryList(receiveTimeFrom, receiveTimeTo string, page, pageSize int) ([]BatchInventory, int, error) {
-	params := map[string]any{"receiveTimeFrom": receiveTimeFrom, "receiveTimeTo": receiveTimeTo, "page": page, "pageSize": pageSize}
+func (s *InventoryService) QueryBatchInventoryList(params *BatchInventoryQueryParams) ([]BatchInventory, int, error) {
 	biz, _ := json.Marshal(params)
 	var list []BatchInventory
 	w := &ResponseWrapper{Result: &list}

@@ -307,23 +307,35 @@ type LocAndQuantity struct {
 
 // SkuInventory represents the current inventory state for a SKU in a warehouse.
 type SkuInventory struct {
-	Sku                  string `json:"sku"`
-	SkuName              string `json:"skuName,omitempty"`
-	Warehouse            string `json:"warehouse"`
-	WarehouseCode        string `json:"warehouseCode,omitempty"`
-	Total                int    `json:"total"`
-	Available            int    `json:"available"`
-	Allocated            int    `json:"allocated"`
-	Unavailable          int    `json:"unavailable,omitempty"`
-	ShippingQuantity     int    `json:"shippingQuantity,omitempty"`
-	PurchaseShippingQuantity int `json:"purchaseShippingQuantity,omitempty"`
-	FirstLegShippingQuantity int `json:"firstLegShippingQuantity,omitempty"`
-	TransferShippingQuantity int `json:"transferShippingQuantity,omitempty"`
-	OrderAllocated       int    `json:"orderAllocated,omitempty"`
-	FirstLegAllocated    int    `json:"firstLegAllocated,omitempty"`
-	TransferAllocated    int    `json:"transferAllocated,omitempty"`
-	TotalCost            float64 `json:"totalCost,omitempty"`
-	AvailableCost        float64 `json:"availableCost,omitempty"`
+	Sku                     string  `json:"sku"`
+	SkuName                 string  `json:"skuName,omitempty"`
+	Warehouse               string  `json:"warehouse"`
+	WarehouseCode           string  `json:"warehouseCode,omitempty"`
+	Total                   int     `json:"total"`
+	Available               int     `json:"available"`
+	Allocated               int     `json:"allocated"`
+	Unavailable             int     `json:"unavailable,omitempty"`
+	ShippingQuantity        int     `json:"shippingQuantity,omitempty"`
+	PurchaseShippingQuantity int    `json:"purchaseShippingQuantity,omitempty"`
+	FirstLegShippingQuantity int    `json:"firstLegShippingQuantity,omitempty"`
+	TransferShippingQuantity int    `json:"transferShippingQuantity,omitempty"`
+	AssemblyShippingQuantity int    `json:"assemblyShippingQuantity,omitempty"`
+	ReturnShippingQuantity  int     `json:"returnShippingQuantity,omitempty"`
+	ManualShippingQuantity  int     `json:"manualShippingQuantity,omitempty"`
+	OrderAllocated          int     `json:"orderAllocated,omitempty"`
+	FirstLegAllocated       int     `json:"firstLegAllocated,omitempty"`
+	TransferAllocated       int     `json:"transferAllocated,omitempty"`
+	AssemblyAllocated       int     `json:"assemblyAllocated,omitempty"`
+	TotalCost               float64 `json:"totalCost,omitempty"`
+	AvailableCost           float64 `json:"availableCost,omitempty"`
+	UnavailableCost         float64 `json:"unavailableCost,omitempty"`
+	AllocatedCost           float64 `json:"allocatedCost,omitempty"`
+	ShippingCost            float64 `json:"shippingCost,omitempty"`
+	TotalGoods              float64 `json:"totalGoods,omitempty"`
+	UnavailableGoods        float64 `json:"unavailableGoods,omitempty"`
+	AvailableGoods          float64 `json:"availableGoods,omitempty"`
+	AllocatedGoods          float64 `json:"allocatedGoods,omitempty"`
+	ShippingGoods           float64 `json:"shippingGoods,omitempty"`
 }
 
 // AsnOrder represents an inbound order (ASN) in QERP.
