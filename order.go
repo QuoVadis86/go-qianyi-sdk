@@ -1,6 +1,9 @@
 package qianyi
 
-import "encoding/json"
+import (
+	"context"
+	"encoding/json"
+)
 
 // OrderService provides access to sales order API operations.
 type OrderService struct {
@@ -14,89 +17,68 @@ func NewOrderService(client *Client) *OrderService {
 
 // CreateOrderParams holds the parameters for creating a sales order.
 type CreateOrderParams struct {
-	Shop                string            `json:"shop"`
-	OnlineOrderNumber   string            `json:"onlineOrderNumber"`
-	PaymentMethod       string            `json:"paymentMethod"`
-	Currency            string            `json:"currency"`
-	PayTime             string            `json:"payTime"`
-	Buyer               *Buyer            `json:"buyer"`
-	SkuList             []OrderSku        `json:"skuList"`
-	Freight             float64           `json:"freight,omitempty"`
-	CodPayAmount        float64           `json:"codPayAmount,omitempty"`
-	BuyerMessage        string            `json:"buyerMessage,omitempty"`
-	SellerRemarks       string            `json:"sellerRemarks,omitempty"`
-	LogisticsSelected   string            `json:"logisticsSelected,omitempty"`
-	TrackingNumber      string            `json:"trackingNumber,omitempty"`
-	IsSpecifyBatch      bool              `json:"isSpecifyBatch,omitempty"`
-	ShippingLabel       string            `json:"shippingLabel,omitempty"`
-	ImgType             string            `json:"imgType,omitempty"`
-	DocumentFile        string            `json:"documentFile,omitempty"`
-	DocumentType        string            `json:"documentType,omitempty"`
-	DocumentName        string            `json:"documentName,omitempty"`
-	CustomerType        string            `json:"customerType,omitempty"`
+	Shop                   string            `json:"shop"`
+	OnlineOrderNumber      string            `json:"onlineOrderNumber"`
+	PaymentMethod          string            `json:"paymentMethod"`
+	Currency               string            `json:"currency"`
+	PayTime                string            `json:"payTime"`
+	Buyer                  *Buyer            `json:"buyer"`
+	SkuList                []OrderSku        `json:"skuList"`
+	Freight                float64           `json:"freight,omitempty"`
+	CodPayAmount           float64           `json:"codPayAmount,omitempty"`
+	BuyerMessage           string            `json:"buyerMessage,omitempty"`
+	SellerRemarks          string            `json:"sellerRemarks,omitempty"`
+	LogisticsSelected      string            `json:"logisticsSelected,omitempty"`
+	TrackingNumber         string            `json:"trackingNumber,omitempty"`
+	IsSpecifyBatch         bool              `json:"isSpecifyBatch,omitempty"`
+	ShippingLabel          string            `json:"shippingLabel,omitempty"`
+	ImgType                string            `json:"imgType,omitempty"`
+	DocumentFile           string            `json:"documentFile,omitempty"`
+	DocumentType           string            `json:"documentType,omitempty"`
+	DocumentName           string            `json:"documentName,omitempty"`
+	CustomerType           string            `json:"customerType,omitempty"`
 	OrderCustomFieldValues []CustomFieldValue `json:"orderCustomFieldValueVOList,omitempty"`
 }
 
 // Create creates a new sales order in QERP.
-func (s *OrderService) Create(params *CreateOrderParams) (*Order, error) {
-	biz, _ := json.Marshal(params)
-	var order Order
-	w := &ResponseWrapper{Result: &order}
-	if err := s.client.Do("CREATE_SALES_ORDER", string(biz), w); err != nil {
-		return nil, err
-	}
-	if w.HasError() {
-		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return &order, nil
+func (s *OrderService) Create(ctx context.Context, params *CreateOrderParams) (*Order, error) {
+	return doSingle[Order](ctx, s.client, "CREATE_SALES_ORDER", params)
 }
 
 // Cancel cancels a sales order by online order number and shop name.
-func (s *OrderService) Cancel(onlineOrderNumber, shop string) error {
-	params := map[string]any{"onlineOrderNumber": onlineOrderNumber, "shop": shop}
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("CLOSE_SALES_ORDER", string(biz), w)
+func (s *OrderService) Cancel(ctx context.Context, onlineOrderNumber, shop string) error {
+	return doAction(ctx, s.client, "CLOSE_SALES_ORDER", map[string]any{"onlineOrderNumber": onlineOrderNumber, "shop": shop})
 }
 
 // OrderQueryParams holds parameters for querying sales orders.
 type OrderQueryParams struct {
-	Page                int    `json:"page"`
-	PageSize            int    `json:"pageSize"`
-	Status              string `json:"status,omitempty"`
-	Shop                string `json:"shop,omitempty"`
-	OrderNumber         string `json:"orderNumber,omitempty"`
-	OnlineOrderNumber   string `json:"onlineOrderNumber,omitempty"`
-	FromPayTime         string `json:"fromPayTime,omitempty"`
-	ToPayTime           string `json:"toPayTime,omitempty"`
-	UpdateTimeFrom      string `json:"updateTimeFrom,omitempty"`
-	UpdateTimeTo        string `json:"updateTimeTo,omitempty"`
-	ShippingTimeFrom    string `json:"shippingTimeFrom,omitempty"`
-	ShippingTimeTo      string `json:"shippingTimeTo,omitempty"`
-	ShopIDList          []int64 `json:"shopIdList,omitempty"`
-	OrderByParam        string `json:"orderByParam,omitempty"`
-	OrderByOrder        string `json:"orderByOrder,omitempty"`
-	CombineSku          *bool   `json:"combineSku,omitempty"`
-	ReturnSnList        *bool   `json:"returnSnList,omitempty"`
-	ReturnGiftFlag      *bool   `json:"returnGiftFlag,omitempty"`
+	Page              int      `json:"page"`
+	PageSize          int      `json:"pageSize"`
+	Status            string   `json:"status,omitempty"`
+	Shop              string   `json:"shop,omitempty"`
+	OrderNumber       string   `json:"orderNumber,omitempty"`
+	OnlineOrderNumber string   `json:"onlineOrderNumber,omitempty"`
+	FromPayTime       string   `json:"fromPayTime,omitempty"`
+	ToPayTime         string   `json:"toPayTime,omitempty"`
+	UpdateTimeFrom    string   `json:"updateTimeFrom,omitempty"`
+	UpdateTimeTo      string   `json:"updateTimeTo,omitempty"`
+	ShippingTimeFrom  string   `json:"shippingTimeFrom,omitempty"`
+	ShippingTimeTo    string   `json:"shippingTimeTo,omitempty"`
+	ShopIDList        []int64  `json:"shopIdList,omitempty"`
+	OrderByParam      string   `json:"orderByParam,omitempty"`
+	OrderByOrder      string   `json:"orderByOrder,omitempty"`
+	CombineSku        *bool    `json:"combineSku,omitempty"`
+	ReturnSnList      *bool    `json:"returnSnList,omitempty"`
+	ReturnGiftFlag    *bool    `json:"returnGiftFlag,omitempty"`
 }
 
 // QueryList retrieves a paginated list of sales orders with optional filters.
-func (s *OrderService) QueryList(params *OrderQueryParams) ([]Order, int, error) {
-	biz, _ := json.Marshal(params)
-	var orders []Order
-	w := &ResponseWrapper{Result: &orders}
-	if err := s.client.Do("QUERY_SALES_ORDER_LIST", string(biz), w); err != nil {
-		return nil, 0, err
-	}
-	if w.HasError() {
-		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return orders, w.BizContent.Total, nil
+func (s *OrderService) QueryList(ctx context.Context, params *OrderQueryParams) ([]Order, int, error) {
+	return doList[Order](ctx, s.client, "QUERY_SALES_ORDER_LIST", params)
 }
 
 // QueryNumberList retrieves a paginated list of sales order numbers.
-func (s *OrderService) QueryNumberList(status, shop, fromPayTime, toPayTime string, page, pageSize int) ([]string, int, error) {
+func (s *OrderService) QueryNumberList(ctx context.Context, status, shop, fromPayTime, toPayTime string, page, pageSize int) ([]string, int, error) {
 	params := map[string]any{"page": page, "pageSize": pageSize}
 	if status != "" {
 		params["status"] = status
@@ -110,29 +92,25 @@ func (s *OrderService) QueryNumberList(status, shop, fromPayTime, toPayTime stri
 	if toPayTime != "" {
 		params["toPayTime"] = toPayTime
 	}
-	biz, _ := json.Marshal(params)
-	var numbers []string
-	w := &ResponseWrapper{Result: &numbers}
-	if err := s.client.Do("QUERY_SALES_ORDER_NUMBER_LIST", string(biz), w); err != nil {
-		return nil, 0, err
-	}
-	if w.HasError() {
-		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return numbers, w.BizContent.Total, nil
-}
-
-// SalesOrderShippingInfoParams holds parameters for querying order shipping info.
-type SalesOrderShippingInfoParams struct {
-	OrderNumber string `json:"orderNumber"`
+	return doList[string](ctx, s.client, "QUERY_SALES_ORDER_NUMBER_LIST", params)
 }
 
 // QueryShippingInfo queries the shipping information for a sales order.
-func (s *OrderService) QueryShippingInfo(orderNumber string) error {
+func (s *OrderService) QueryShippingInfo(ctx context.Context, orderNumber string) (json.RawMessage, error) {
 	params := map[string]any{"orderNumber": orderNumber}
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("QUERY_SALES_ORDER_SHIPPING_INFO", string(biz), w)
+	biz, err := json.Marshal(params)
+	if err != nil {
+		return nil, err
+	}
+	var raw json.RawMessage
+	w := &ResponseWrapper{Result: &raw}
+	if err := s.client.Do(ctx, "QUERY_SALES_ORDER_SHIPPING_INFO", string(biz), w); err != nil {
+		return nil, err
+	}
+	if w.HasError() {
+		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
+	}
+	return raw, nil
 }
 
 // AuditParams holds parameters for auditing a sales order.
@@ -143,10 +121,8 @@ type AuditParams struct {
 }
 
 // Audit audits a sales order.
-func (s *OrderService) Audit(params *AuditParams) error {
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("QUERY_SALES_ORDER_AUDIT", string(biz), w)
+func (s *OrderService) Audit(ctx context.Context, params *AuditParams) error {
+	return doAction(ctx, s.client, "QUERY_SALES_ORDER_AUDIT", params)
 }
 
 // CreateWaveOrderParams holds parameters for creating a wave order.
@@ -156,10 +132,8 @@ type CreateWaveOrderParams struct {
 }
 
 // CreateWaveOrder creates a wave order for batch picking.
-func (s *OrderService) CreateWaveOrder(params *CreateWaveOrderParams) error {
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("CREATE_WAVE_ORDER", string(biz), w)
+func (s *OrderService) CreateWaveOrder(ctx context.Context, params *CreateWaveOrderParams) error {
+	return doAction(ctx, s.client, "CREATE_WAVE_ORDER", params)
 }
 
 // SendToWmsParams holds parameters for sending an order to WMS.
@@ -170,41 +144,50 @@ type SendToWmsParams struct {
 }
 
 // SendToWms sends a sales order to the warehouse management system.
-func (s *OrderService) SendToWms(params *SendToWmsParams) error {
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("SEND_SALES_ORDER_TO_WMS", string(biz), w)
+func (s *OrderService) SendToWms(ctx context.Context, params *SendToWmsParams) error {
+	return doAction(ctx, s.client, "SEND_SALES_ORDER_TO_WMS", params)
 }
 
 // QueryOriginalOrder queries the original sales order by shop and online order number.
-func (s *OrderService) QueryOriginalOrder(shop, onlineOrderNumber string) (*Order, error) {
+func (s *OrderService) QueryOriginalOrder(ctx context.Context, shop, onlineOrderNumber string) (*Order, error) {
 	params := map[string]any{"shop": shop, "onlineOrderNumber": onlineOrderNumber}
-	biz, _ := json.Marshal(params)
-	var order Order
-	w := &ResponseWrapper{Result: &order}
-	if err := s.client.Do("QUERY_ORIGINAL_SALES_ORDER", string(biz), w); err != nil {
+	return doSingle[Order](ctx, s.client, "QUERY_ORIGINAL_SALES_ORDER", params)
+}
+
+// QueryPickupStatus queries the pickup status of a sales order.
+func (s *OrderService) QueryPickupStatus(ctx context.Context, shop, onlineOrderNumber string) (json.RawMessage, error) {
+	params := map[string]any{"shop": shop, "onlineOrderNumber": onlineOrderNumber}
+	biz, err := json.Marshal(params)
+	if err != nil {
+		return nil, err
+	}
+	var raw json.RawMessage
+	w := &ResponseWrapper{Result: &raw}
+	if err := s.client.Do(ctx, "QUERY_SALES_ORDER_PICKUP_STATUS", string(biz), w); err != nil {
 		return nil, err
 	}
 	if w.HasError() {
 		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
 	}
-	return &order, nil
-}
-
-// QueryPickupStatus queries the pickup status of a sales order.
-func (s *OrderService) QueryPickupStatus(shop, onlineOrderNumber string) error {
-	params := map[string]any{"shop": shop, "onlineOrderNumber": onlineOrderNumber}
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("QUERY_SALES_ORDER_PICKUP_STATUS", string(biz), w)
+	return raw, nil
 }
 
 // QueryOrderDocument queries the document attached to a sales order.
-func (s *OrderService) QueryOrderDocument(orderNumber string) error {
+func (s *OrderService) QueryOrderDocument(ctx context.Context, orderNumber string) (json.RawMessage, error) {
 	params := map[string]any{"orderNumber": orderNumber}
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("QUERY_SALES_ORDER_DOCUMENT", string(biz), w)
+	biz, err := json.Marshal(params)
+	if err != nil {
+		return nil, err
+	}
+	var raw json.RawMessage
+	w := &ResponseWrapper{Result: &raw}
+	if err := s.client.Do(ctx, "QUERY_SALES_ORDER_DOCUMENT", string(biz), w); err != nil {
+		return nil, err
+	}
+	if w.HasError() {
+		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
+	}
+	return raw, nil
 }
 
 // SubscribeOrderItem represents an order to subscribe to.
@@ -225,7 +208,7 @@ type SubscribeOrderResult struct {
 }
 
 // SubscribeOrder subscribes to order status push notifications.
-func (s *OrderService) SubscribeOrder(orderType string, orderNumbers []string) ([]SubscribeOrderResult, error) {
+func (s *OrderService) SubscribeOrder(ctx context.Context, orderType string, orderNumbers []string) ([]SubscribeOrderResult, error) {
 	list := make([]SubscribeOrderItem, len(orderNumbers))
 	for i, n := range orderNumbers {
 		list[i] = SubscribeOrderItem{OrderNumber: n}
@@ -234,14 +217,12 @@ func (s *OrderService) SubscribeOrder(orderType string, orderNumbers []string) (
 		OrderType: orderType,
 		OrderList: list,
 	}
-	biz, _ := json.Marshal(params)
-	var result []SubscribeOrderResult
-	w := &ResponseWrapper{Result: &result}
-	if err := s.client.Do("SUBSCRIBE_ORDER", string(biz), w); err != nil {
+	result, err := doSingle[[]SubscribeOrderResult](ctx, s.client, "SUBSCRIBE_ORDER", params)
+	if err != nil {
 		return nil, err
 	}
-	if w.HasError() {
-		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
+	if result == nil {
+		return nil, nil
 	}
-	return result, nil
+	return *result, nil
 }

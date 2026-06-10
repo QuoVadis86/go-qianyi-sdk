@@ -1,6 +1,6 @@
 package qianyi
 
-import "encoding/json"
+import "context"
 
 // ShopService provides access to shop-related API operations.
 type ShopService struct {
@@ -13,7 +13,7 @@ func NewShopService(client *Client) *ShopService {
 }
 
 // QueryList retrieves a paginated list of shops with optional filters.
-func (s *ShopService) QueryList(page, pageSize int, platform, status, siteCode, name string) ([]Shop, int, error) {
+func (s *ShopService) QueryList(ctx context.Context, page, pageSize int, platform, status, siteCode, name string) ([]Shop, int, error) {
 	params := map[string]any{
 		"page":     page,
 		"pageSize": pageSize,
@@ -30,14 +30,5 @@ func (s *ShopService) QueryList(page, pageSize int, platform, status, siteCode, 
 	if name != "" {
 		params["name"] = name
 	}
-	biz, _ := json.Marshal(params)
-	var shops []Shop
-	w := &ResponseWrapper{Result: &shops}
-	if err := s.client.Do("QUERY_SHOP_LIST", string(biz), w); err != nil {
-		return nil, 0, err
-	}
-	if w.HasError() {
-		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return shops, w.BizContent.Total, nil
+	return doList[Shop](ctx, s.client, "QUERY_SHOP_LIST", params)
 }

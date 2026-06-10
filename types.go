@@ -1,6 +1,7 @@
 package qianyi
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 )
@@ -98,4 +99,72 @@ func truncate(s string, n int) string {
 		return s
 	}
 	return s[:n] + "..."
+}
+
+// doList sends a paginated query request and deserializes the result into a typed slice.
+// It handles JSON marshaling of params, error checking, and total count extraction.
+func doList[T any](ctx context.Context, c *Client, serviceType string, params any) ([]T, int, error) {
+	biz, err := json.Marshal(params)
+	if err != nil {
+		return nil, 0, fmt.Errorf("marshal params: %w", err)
+	}
+	var list []T
+	w := &ResponseWrapper{Result: &list}
+	if err := c.Do(ctx, serviceType, string(biz), w); err != nil {
+		return nil, 0, err
+	}
+	if w.HasError() {
+		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
+	}
+	return list, w.BizContent.Total, nil
+}
+
+// doListNoTotal sends a query request without expecting a total count.
+func doListNoTotal[T any](ctx context.Context, c *Client, serviceType string, params any) ([]T, error) {
+	biz, err := json.Marshal(params)
+	if err != nil {
+		return nil, fmt.Errorf("marshal params: %w", err)
+	}
+	var list []T
+	w := &ResponseWrapper{Result: &list}
+	if err := c.Do(ctx, serviceType, string(biz), w); err != nil {
+		return nil, err
+	}
+	if w.HasError() {
+		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
+	}
+	return list, nil
+}
+
+// doSingle sends a request and deserializes the single result into a typed pointer.
+func doSingle[T any](ctx context.Context, c *Client, serviceType string, params any) (*T, error) {
+	biz, err := json.Marshal(params)
+	if err != nil {
+		return nil, fmt.Errorf("marshal params: %w", err)
+	}
+	var item T
+	w := &ResponseWrapper{Result: &item}
+	if err := c.Do(ctx, serviceType, string(biz), w); err != nil {
+		return nil, err
+	}
+	if w.HasError() {
+		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
+	}
+	return &item, nil
+}
+
+// doAction sends a request that expects no specific response data beyond success/failure.
+func doAction(ctx context.Context, c *Client, serviceType string, params any) error {
+	biz, err := json.Marshal(params)
+	if err != nil {
+		return fmt.Errorf("marshal params: %w", err)
+	}
+	w := &ResponseWrapper{}
+	if err := c.Do(ctx, serviceType, string(biz), w); err != nil {
+		return err
+	}
+	if w.HasError() {
+		return &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
+	}
+	return nil
 }

@@ -1,6 +1,6 @@
 package qianyi
 
-import "encoding/json"
+import "context"
 
 // LogisticsService provides access to first-leg logistics API operations.
 type LogisticsService struct {
@@ -67,54 +67,45 @@ type FirstLegOrderSku struct {
 
 // FirstLegQueryParams holds params for querying first-leg orders.
 type FirstLegQueryParams struct {
-	FirstLegNumber  string `json:"firstLegNumber,omitempty"`
-	Status          string `json:"status,omitempty"`
-	UpdateTimeFrom  string `json:"updateTimeFrom,omitempty"`
-	UpdateTimeTo    string `json:"updateTimeTo,omitempty"`
-	Page            int    `json:"page"`
-	PageSize        int    `json:"pageSize"`
+	FirstLegNumber string `json:"firstLegNumber,omitempty"`
+	Status         string `json:"status,omitempty"`
+	UpdateTimeFrom string `json:"updateTimeFrom,omitempty"`
+	UpdateTimeTo   string `json:"updateTimeTo,omitempty"`
+	Page           int    `json:"page"`
+	PageSize       int    `json:"pageSize"`
 }
 
 // QueryFirstLegList retrieves first-leg logistics orders.
-func (s *LogisticsService) QueryFirstLegList(params *FirstLegQueryParams) ([]FirstLegOrder, int, error) {
-	biz, _ := json.Marshal(params)
-	var list []FirstLegOrder
-	w := &ResponseWrapper{Result: &list}
-	if err := s.client.Do("QUERY_FIRST_LEG_ORDER_LIST", string(biz), w); err != nil {
-		return nil, 0, err
-	}
-	if w.HasError() {
-		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return list, w.BizContent.Total, nil
+func (s *LogisticsService) QueryFirstLegList(ctx context.Context, params *FirstLegQueryParams) ([]FirstLegOrder, int, error) {
+	return doList[FirstLegOrder](ctx, s.client, "QUERY_FIRST_LEG_ORDER_LIST", params)
 }
 
 // FirstLegSkuDetail represents a SKU detail within a first-leg order creation.
 type FirstLegSkuDetail struct {
-	LineID              int    `json:"lineId"`
-	WarehouseName       string `json:"warehouseName"`
-	DestWarehouseName   string `json:"destWarehouseName"`
-	LogisticsName       string `json:"logisticsName"`
-	Sku                 string `json:"sku"`
-	PreExpectedQuantity int    `json:"preExpectedQuantity"`
-	FbaNo               string `json:"fbaNo,omitempty"`
-	CustomNumber        string `json:"customNumber,omitempty"`
-	PortFrom            string `json:"portFrom,omitempty"`
-	PortTo              string `json:"portTo,omitempty"`
-	BuyerTitle          string `json:"buyerTitle,omitempty"`
-	TrackNumber         string `json:"trackNumber,omitempty"`
-	PreReceiveTime      string `json:"preReceiveTime,omitempty"`
-	PreShipTime         string `json:"preShipTime,omitempty"`
-	Remark              string `json:"remark,omitempty"`
-	ContainerNumber     string `json:"containerNumber,omitempty"`
-	OriginalAsnNumber   string `json:"originalAsnNumber,omitempty"`
-	PackingRate         int    `json:"packingRate,omitempty"`
+	LineID              int     `json:"lineId"`
+	WarehouseName       string  `json:"warehouseName"`
+	DestWarehouseName   string  `json:"destWarehouseName"`
+	LogisticsName       string  `json:"logisticsName"`
+	Sku                 string  `json:"sku"`
+	PreExpectedQuantity int     `json:"preExpectedQuantity"`
+	FbaNo               string  `json:"fbaNo,omitempty"`
+	CustomNumber        string  `json:"customNumber,omitempty"`
+	PortFrom            string  `json:"portFrom,omitempty"`
+	PortTo              string  `json:"portTo,omitempty"`
+	BuyerTitle          string  `json:"buyerTitle,omitempty"`
+	TrackNumber         string  `json:"trackNumber,omitempty"`
+	PreReceiveTime      string  `json:"preReceiveTime,omitempty"`
+	PreShipTime         string  `json:"preShipTime,omitempty"`
+	Remark              string  `json:"remark,omitempty"`
+	ContainerNumber     string  `json:"containerNumber,omitempty"`
+	OriginalAsnNumber   string  `json:"originalAsnNumber,omitempty"`
+	PackingRate         int     `json:"packingRate,omitempty"`
 	NetWeight           float64 `json:"netWeight,omitempty"`
 	Length              float64 `json:"length,omitempty"`
 	Width               float64 `json:"width,omitempty"`
 	Height              float64 `json:"height,omitempty"`
-	SkuRemark           string `json:"skuRemark,omitempty"`
-	RefID               string `json:"refId,omitempty"`
+	SkuRemark           string  `json:"skuRemark,omitempty"`
+	RefID               string  `json:"refId,omitempty"`
 }
 
 // CreateFirstLegParams holds parameters for creating a first-leg logistics order.
@@ -124,10 +115,8 @@ type CreateFirstLegParams struct {
 }
 
 // CreateFirstLeg creates a first-leg logistics order.
-func (s *LogisticsService) CreateFirstLeg(params *CreateFirstLegParams) error {
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("CREATE_FIRST_LEG_ORDER", string(biz), w)
+func (s *LogisticsService) CreateFirstLeg(ctx context.Context, params *CreateFirstLegParams) error {
+	return doAction(ctx, s.client, "CREATE_FIRST_LEG_ORDER", params)
 }
 
 // FirstLegLogisticsInfo represents a logistics option for first-leg.
@@ -137,27 +126,18 @@ type FirstLegLogisticsInfo struct {
 }
 
 // QueryFirstLegLogistics queries available first-leg logistics for a warehouse.
-func (s *LogisticsService) QueryFirstLegLogistics(warehouseName string) ([]FirstLegLogisticsInfo, error) {
+func (s *LogisticsService) QueryFirstLegLogistics(ctx context.Context, warehouseName string) ([]FirstLegLogisticsInfo, error) {
 	params := map[string]any{"warehouseName": warehouseName}
-	biz, _ := json.Marshal(params)
-	var list []FirstLegLogisticsInfo
-	w := &ResponseWrapper{Result: &list}
-	if err := s.client.Do("QUERY_FIRST_LRG_LOGISTICS", string(biz), w); err != nil {
-		return nil, err
-	}
-	if w.HasError() {
-		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return list, nil
+	return doListNoTotal[FirstLegLogisticsInfo](ctx, s.client, "QUERY_FIRST_LRG_LOGISTICS", params)
 }
 
 // TrackingPackage represents a logistics tracking package.
 type TrackingPackage struct {
-	OrderNumber    string        `json:"orderNumber"`
-	OnlineOrderID  string        `json:"onlineOrderId"`
-	TrackingNumber string        `json:"trackingNumber"`
-	Carrier        string        `json:"carrier"`
-	Status         string        `json:"status"`
+	OrderNumber    string          `json:"orderNumber"`
+	OnlineOrderID  string          `json:"onlineOrderId"`
+	TrackingNumber string          `json:"trackingNumber"`
+	Carrier        string          `json:"carrier"`
+	Status         string          `json:"status"`
 	EventList      []TrackingEvent `json:"eventList,omitempty"`
 }
 
@@ -181,17 +161,8 @@ type TrackingQueryParams struct {
 }
 
 // QueryFirstLegTracking queries first-leg tracking packages.
-func (s *LogisticsService) QueryFirstLegTracking(params *TrackingQueryParams) ([]TrackingPackage, int, error) {
-	biz, _ := json.Marshal(params)
-	var list []TrackingPackage
-	w := &ResponseWrapper{Result: &list}
-	if err := s.client.Do("QUERY_FIRST_LRG_TRACKING_PACKAGE", string(biz), w); err != nil {
-		return nil, 0, err
-	}
-	if w.HasError() {
-		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return list, w.BizContent.Total, nil
+func (s *LogisticsService) QueryFirstLegTracking(ctx context.Context, params *TrackingQueryParams) ([]TrackingPackage, int, error) {
+	return doList[TrackingPackage](ctx, s.client, "QUERY_FIRST_LRG_TRACKING_PACKAGE", params)
 }
 
 // WithdrawFirstLegParams holds parameters for withdrawing a first-leg order.
@@ -202,24 +173,20 @@ type WithdrawFirstLegParams struct {
 }
 
 // WithdrawFirstLeg withdraws or deletes a first-leg logistics order.
-func (s *LogisticsService) WithdrawFirstLeg(params *WithdrawFirstLegParams) error {
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("WITHDRAW_AND_DEL_FIRST_LEG", string(biz), w)
+func (s *LogisticsService) WithdrawFirstLeg(ctx context.Context, params *WithdrawFirstLegParams) error {
+	return doAction(ctx, s.client, "WITHDRAW_AND_DEL_FIRST_LEG", params)
 }
 
 // PushTrackingParams holds parameters for pushing tracking status.
 type PushTrackingParams struct {
-	OrderNumber     string `json:"orderNumber"`
-	OnlineOrderID   string `json:"onlineOrderId"`
-	TrackingNumber  string `json:"trackingNumber"`
-	Carrier         string `json:"carrier"`
-	Status          string `json:"status"`
+	OrderNumber    string `json:"orderNumber"`
+	OnlineOrderID  string `json:"onlineOrderId"`
+	TrackingNumber string `json:"trackingNumber"`
+	Carrier        string `json:"carrier"`
+	Status         string `json:"status"`
 }
 
 // PushTrackingPackage pushes logistics tracking status notification.
-func (s *LogisticsService) PushTrackingPackage(params *PushTrackingParams) error {
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("PUSH_TRACKING_PACKAGE", string(biz), w)
+func (s *LogisticsService) PushTrackingPackage(ctx context.Context, params *PushTrackingParams) error {
+	return doAction(ctx, s.client, "PUSH_TRACKING_PACKAGE", params)
 }

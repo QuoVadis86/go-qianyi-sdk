@@ -1,6 +1,6 @@
 package qianyi
 
-import "encoding/json"
+import "context"
 
 // WarehouseService provides access to warehouse API operations.
 type WarehouseService struct {
@@ -13,7 +13,7 @@ func NewWarehouseService(client *Client) *WarehouseService {
 }
 
 // QueryList retrieves a paginated list of warehouses with optional filters.
-func (s *WarehouseService) QueryList(page, pageSize int, status, name string) ([]Warehouse, int, error) {
+func (s *WarehouseService) QueryList(ctx context.Context, page, pageSize int, status, name string) ([]Warehouse, int, error) {
 	params := map[string]any{"page": page, "pageSize": pageSize}
 	if status != "" {
 		params["status"] = status
@@ -21,14 +21,5 @@ func (s *WarehouseService) QueryList(page, pageSize int, status, name string) ([
 	if name != "" {
 		params["name"] = name
 	}
-	biz, _ := json.Marshal(params)
-	var warehouses []Warehouse
-	w := &ResponseWrapper{Result: &warehouses}
-	if err := s.client.Do("QUERY_WAREHOUSE_LIST", string(biz), w); err != nil {
-		return nil, 0, err
-	}
-	if w.HasError() {
-		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return warehouses, w.BizContent.Total, nil
+	return doList[Warehouse](ctx, s.client, "QUERY_WAREHOUSE_LIST", params)
 }

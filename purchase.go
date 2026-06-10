@@ -1,6 +1,6 @@
 package qianyi
 
-import "encoding/json"
+import "context"
 
 // PurchaseService provides access to purchase order API operations.
 type PurchaseService struct {
@@ -14,27 +14,18 @@ func NewPurchaseService(client *Client) *PurchaseService {
 
 // PurchaseQueryParams holds parameters for querying purchase orders.
 type PurchaseQueryParams struct {
-	Page            int    `json:"page"`
-	PageSize        int    `json:"pageSize"`
-	PurchaseNumber  string `json:"purchaseNumber,omitempty"`
-	CustomNumber    string `json:"customNumber,omitempty"`
-	Status          string `json:"status,omitempty"`
-	UpdateTimeFrom  string `json:"updateTimeFrom,omitempty"`
-	UpdateTimeTo    string `json:"updateTimeTo,omitempty"`
+	Page           int    `json:"page"`
+	PageSize       int    `json:"pageSize"`
+	PurchaseNumber string `json:"purchaseNumber,omitempty"`
+	CustomNumber   string `json:"customNumber,omitempty"`
+	Status         string `json:"status,omitempty"`
+	UpdateTimeFrom string `json:"updateTimeFrom,omitempty"`
+	UpdateTimeTo   string `json:"updateTimeTo,omitempty"`
 }
 
 // QueryList retrieves purchase orders with optional filters.
-func (s *PurchaseService) QueryList(params *PurchaseQueryParams) ([]PurchaseOrder, int, error) {
-	biz, _ := json.Marshal(params)
-	var list []PurchaseOrder
-	w := &ResponseWrapper{Result: &list}
-	if err := s.client.Do("QUERY_PURCHASE_ORDER_LIST", string(biz), w); err != nil {
-		return nil, 0, err
-	}
-	if w.HasError() {
-		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
-	}
-	return list, w.BizContent.Total, nil
+func (s *PurchaseService) QueryList(ctx context.Context, params *PurchaseQueryParams) ([]PurchaseOrder, int, error) {
+	return doList[PurchaseOrder](ctx, s.client, "QUERY_PURCHASE_ORDER_LIST", params)
 }
 
 // PurchaseSkuInput represents a SKU line within a purchase order creation.
@@ -88,16 +79,12 @@ type CreatePurchaseParams struct {
 }
 
 // Create creates a new purchase order in QERP.
-func (s *PurchaseService) Create(params *CreatePurchaseParams) error {
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("CREATE_PURCHASE_ORDER", string(biz), w)
+func (s *PurchaseService) Create(ctx context.Context, params *CreatePurchaseParams) error {
+	return doAction(ctx, s.client, "CREATE_PURCHASE_ORDER", params)
 }
 
 // Update updates an existing purchase order. Requires purchaseNumber and isUpdate=true.
-func (s *PurchaseService) Update(params *CreatePurchaseParams) error {
+func (s *PurchaseService) Update(ctx context.Context, params *CreatePurchaseParams) error {
 	params.IsUpdate = true
-	biz, _ := json.Marshal(params)
-	w := &ResponseWrapper{}
-	return s.client.Do("UPDATE_PURCHASE_ORDER", string(biz), w)
+	return doAction(ctx, s.client, "UPDATE_PURCHASE_ORDER", params)
 }

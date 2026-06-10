@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -8,10 +9,12 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	sdk := qianyi.NewSDK("your-app-id", "your-app-secret")
 	sdk.TestEnv()
 
-	shops, total, err := sdk.Shop.QueryList(1, 10, "", "", "", "")
+	shops, total, err := sdk.Shop.QueryList(ctx, 1, 10, "", "", "", "")
 	if err != nil {
 		log.Fatalf("QueryShops failed: %v", err)
 	}
@@ -20,7 +23,7 @@ func main() {
 		fmt.Printf("  Shop: %s (platform: %s, status: %s)\n", shop.Name, shop.Platform, shop.Status)
 	}
 
-	skus, total, err := sdk.Sku.QueryList(1, 10)
+	skus, total, err := sdk.Sku.QueryList(ctx, 1, 10)
 	if err != nil {
 		log.Fatalf("QuerySkus failed: %v", err)
 	}
@@ -29,7 +32,7 @@ func main() {
 		fmt.Printf("  SKU: %s - %s\n", sku.Sku, sku.Title)
 	}
 
-	warehouses, total, err := sdk.Warehouse.QueryList(1, 10, "", "")
+	warehouses, total, err := sdk.Warehouse.QueryList(ctx, 1, 10, "", "")
 	if err != nil {
 		log.Fatalf("QueryWarehouses failed: %v", err)
 	}
@@ -38,7 +41,7 @@ func main() {
 		fmt.Printf("  Warehouse: %s (type: %s, country: %s)\n", w.Name, w.Kind, w.Country)
 	}
 
-	inventory, total, err := sdk.Inventory.QueryListV2(&qianyi.InventoryQueryV2Params{
+	inventory, total, err := sdk.Inventory.QueryListV2(ctx, &qianyi.InventoryQueryV2Params{
 		Page:      1,
 		PageSize:  10,
 		Warehouse: "your-warehouse-name",
