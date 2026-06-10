@@ -12,6 +12,13 @@ type Shop struct {
 	OnlineShopID      string `json:"onlineShopId,omitempty"`
 	Currency          string `json:"currency,omitempty"`
 	TimeZoneID        string `json:"timeZoneId,omitempty"`
+	ShopGroupVOList   []ShopGroup `json:"shopGroupVOList,omitempty"`
+}
+
+// ShopGroup represents a shop group.
+type ShopGroup struct {
+	ID            int64  `json:"id"`
+	ShopGroupName string `json:"shopGroupName"`
 }
 
 // Warehouse represents a physical or virtual warehouse in QERP.
@@ -29,32 +36,36 @@ type Warehouse struct {
 
 // Sku represents a stock keeping unit (product) in QERP.
 type Sku struct {
-	Sku            string  `json:"sku"`
-	Title          string  `json:"title"`
-	Barcode        string  `json:"barcode,omitempty"`
-	Type           string  `json:"type"`
-	IsAssembly     int     `json:"isAssembly,omitempty"`
-	PicURL         string  `json:"picUrl,omitempty"`
-	SaleStatus     string  `json:"saleStatus,omitempty"`
-	Weight         float64 `json:"weight"`
-	NetWeight      float64 `json:"netWeight"`
-	WeightUnit     string  `json:"weightUnit"`
-	Length         float64 `json:"length"`
-	Width          float64 `json:"width"`
-	Height         float64 `json:"height"`
-	DimensionUnit  string  `json:"dimensionUnit"`
-	Enable         int     `json:"enable"`
-	Price          float64 `json:"price,omitempty"`
-	Brand          string  `json:"brand,omitempty"`
-	Unit           string  `json:"unit,omitempty"`
-	Color          string  `json:"color,omitempty"`
-	Size           string  `json:"size,omitempty"`
-	Description    string  `json:"description,omitempty"`
-	CategoryName1  string  `json:"categoryName1,omitempty"`
-	CategoryName2  string  `json:"categoryName2,omitempty"`
-	CategoryName3  string  `json:"categoryName3,omitempty"`
-	PurchaseCost   float64 `json:"purchaseCost,omitempty"`
-	RemarkName     string  `json:"remarkName,omitempty"`
+	Sku              string  `json:"sku"`
+	Title            string  `json:"title"`
+	Barcode          string  `json:"barcode,omitempty"`
+	Type             string  `json:"type"`
+	IsAssembly       int     `json:"isAssembly,omitempty"`
+	PicURL           string  `json:"picUrl,omitempty"`
+	PicURLList       []string `json:"picUrlList,omitempty"`
+	SaleStatus       string  `json:"saleStatus,omitempty"`
+	Weight           float64 `json:"weight"`
+	NetWeight        float64 `json:"netWeight"`
+	WeightUnit       string  `json:"weightUnit"`
+	Length           float64 `json:"length"`
+	Width            float64 `json:"width"`
+	Height           float64 `json:"height"`
+	DimensionUnit    string  `json:"dimensionUnit"`
+	Enable           int     `json:"enable"`
+	Price            float64 `json:"price,omitempty"`
+	PriceUnit        string  `json:"priceUnit,omitempty"`
+	Brand            string  `json:"brand,omitempty"`
+	Unit             string  `json:"unit,omitempty"`
+	Color            string  `json:"color,omitempty"`
+	Size             string  `json:"size,omitempty"`
+	Description      string  `json:"description,omitempty"`
+	CategoryName1    string  `json:"categoryName1,omitempty"`
+	CategoryName2    string  `json:"categoryName2,omitempty"`
+	CategoryName3    string  `json:"categoryName3,omitempty"`
+	PurchaseCost     float64 `json:"purchaseCost,omitempty"`
+	RemarkName       string  `json:"remarkName,omitempty"`
+	AbbrTitle        string  `json:"abbrTitle,omitempty"`
+	ItemPackage      int     `json:"itemPackage,omitempty"`
 }
 
 // Buyer holds the receiver/shipping address for an order.
@@ -80,63 +91,252 @@ type OrderSku struct {
 	Quantity          int     `json:"quantity"`
 	ShippingPrice     float64 `json:"shippingPrice,omitempty"`
 	PromotionDiscount float64 `json:"promotionDiscount,omitempty"`
+	BatchNo           string  `json:"batchNo,omitempty"`
+	MfgDate           string  `json:"mfgDate,omitempty"`
+	ExpDate           string  `json:"expDate,omitempty"`
+	OriginCountry     string  `json:"originCountry,omitempty"`
+}
+
+// OrderTag represents flags/tags on a sales order.
+type OrderTag struct {
+	HasRefund                int `json:"hasRefund,omitempty"`
+	ItemReturned             int `json:"itemReturned,omitempty"`
+	Consolidated             int `json:"consolidated,omitempty"`
+	Split                    int `json:"split,omitempty"`
+	Locked                   int `json:"locked,omitempty"`
+	SendWms                  int `json:"sendWms,omitempty"`
+	SendFailed               int `json:"sendFailed,omitempty"`
+	OnlineShipFeedbackAlready int `json:"onlineShipFeedbackAlready,omitempty"`
+	OutOfStock               int `json:"outOfStock,omitempty"`
+	PreSale                  int `json:"preSale,omitempty"`
+	OnlineShipped            int `json:"onlineShipped,omitempty"`
+	PlatformFulfillment      int `json:"platformFulfillment,omitempty"`
+	PartRefund               int `json:"partRefund,omitempty"`
+	AllRefund                int `json:"allRefund,omitempty"`
+	PartReturned             int `json:"partReturned,omitempty"`
+	AllReturned              int `json:"allReturned,omitempty"`
+	ReShip                   int `json:"reShip,omitempty"`
 }
 
 // Order represents a sales order in QERP.
 type Order struct {
-	OrderNumber       string     `json:"orderNumber"`
-	OnlineOrderNumber string     `json:"onlineOrderNumber,omitempty"`
-	ParentOrderNumber string     `json:"parentOrderNumber,omitempty"`
-	Shop              string     `json:"shop"`
-	Warehouse         string     `json:"warehouse,omitempty"`
-	Status            string     `json:"status"`
-	WMSStatus         string     `json:"wmsStatus,omitempty"`
-	Currency          string     `json:"currency"`
-	TotalAmount       float64    `json:"totalAmount"`
-	Freight           float64    `json:"freight,omitempty"`
-	Platform          string     `json:"platform"`
-	Carrier           string     `json:"carrier,omitempty"`
-	TrackingNumber    string     `json:"trackingNumber,omitempty"`
-	PayTime           int64      `json:"payTime,omitempty"`
-	ShippingTime      int64      `json:"shippingTime,omitempty"`
-	CreateTime        int64      `json:"createTime"`
-	UpdateTime        int64      `json:"updateTime"`
-	Buyer             *Buyer     `json:"buyer,omitempty"`
-	SkuList           []OrderSku `json:"skuList,omitempty"`
+	OrderNumber              string     `json:"orderNumber"`
+	OnlineOrderNumber        string     `json:"onlineOrderNumber,omitempty"`
+	ParentOrderNumber        string     `json:"parentOrderNumber,omitempty"`
+	SubOrderNumberList       []string   `json:"subOrderNumberList,omitempty"`
+	IsOriginalOrder          bool       `json:"isOriginalOrder,omitempty"`
+	Shop                     string     `json:"shop"`
+	ShopID                   int64      `json:"shopId,omitempty"`
+	Warehouse                string     `json:"warehouse,omitempty"`
+	Status                   string     `json:"status"`
+	WMSStatus                string     `json:"wmsStatus,omitempty"`
+	Currency                 string     `json:"currency"`
+	TotalAmount              float64    `json:"totalAmount"`
+	Freight                  float64    `json:"freight,omitempty"`
+	Platform                 string     `json:"platform"`
+	Carrier                  string     `json:"carrier,omitempty"`
+	TrackingNumber           string     `json:"trackingNumber,omitempty"`
+	PayTime                  int64      `json:"payTime,omitempty"`
+	ShippingTime             int64      `json:"shippingTime,omitempty"`
+	CreateTime               int64      `json:"createTime"`
+	UpdateTime               int64      `json:"updateTime"`
+	AuditTime                int64      `json:"auditTime,omitempty"`
+	Buyer                    *Buyer     `json:"buyer,omitempty"`
+	SkuList                  []OrderSku `json:"skuList,omitempty"`
+	Tag                      *OrderTag  `json:"tag,omitempty"`
+	BuyerMessage             string     `json:"buyerMessage,omitempty"`
+	SellerRemarks            string     `json:"sellerRemarks,omitempty"`
+	PaymentMethod            string     `json:"paymentMethod,omitempty"`
+	LogisticsSelected        string     `json:"logisticsSelected,omitempty"`
+	OnlineStatus             string     `json:"onlineStatus,omitempty"`
+	SiteCode                 string     `json:"siteCode,omitempty"`
+	IsDeleted                int        `json:"isDeleted,omitempty"`
+	SalesRecordNumber        string     `json:"salesRecordNumber,omitempty"`
 }
 
 // ReturnOrder represents a refund/return order in QERP.
 type ReturnOrder struct {
-	ReturnNumber  string      `json:"returnNumber"`
-	OrderNumber   string      `json:"orderNumber,omitempty"`
-	Warehouse     string      `json:"warehouse"`
-	Status        string      `json:"status"`
-	Shop          string      `json:"shop"`
-	CreateTime    int64       `json:"createTime"`
-	UpdateTime    int64       `json:"updateTime"`
-	Reason        string      `json:"reason,omitempty"`
-	Carrier       string      `json:"carrier,omitempty"`
-	CustomNumber  string      `json:"customNumber,omitempty"`
-	Type          string      `json:"type"`
-	ReturnSkuList []ReturnSku `json:"returnSkuList,omitempty"`
+	ReturnNumber   string      `json:"returnNumber"`
+	OrderNumber    string      `json:"orderNumber,omitempty"`
+	OnlineOrderNumber string   `json:"onlineOrderNumber,omitempty"`
+	Warehouse      string      `json:"warehouse"`
+	Status         string      `json:"status"`
+	Shop           string      `json:"shop"`
+	CreateTime     int64       `json:"createTime"`
+	UpdateTime     int64       `json:"updateTime"`
+	FinishTime     int64       `json:"finishTime,omitempty"`
+	CommitTime     int64       `json:"commitTime,omitempty"`
+	ReceiveTime    int64       `json:"receiveTime,omitempty"`
+	Reason         string      `json:"reason,omitempty"`
+	Remark         string      `json:"remark,omitempty"`
+	Carrier        string      `json:"carrier,omitempty"`
+	CustomNumber   string      `json:"customNumber,omitempty"`
+	Type           string      `json:"type"`
+	BuyerID        string      `json:"buyerId,omitempty"`
+	Currency       string      `json:"currency,omitempty"`
+	OrderRefundAmount float64  `json:"orderRefundAmount,omitempty"`
+	AsnNumber      string      `json:"asnNumber,omitempty"`
+	ReturnSkuList  []ReturnSku `json:"returnSkuList,omitempty"`
 }
 
 // ReturnSku represents a product line item within a return order.
 type ReturnSku struct {
-	Sku      string `json:"sku"`
-	Quantity int    `json:"quantity"`
-	Remark   string `json:"remark,omitempty"`
+	Sku              string `json:"sku"`
+	OrderSkuID       int64  `json:"orderSkuId,omitempty"`
+	Quantity         int    `json:"quantity"`
+	Remark           string `json:"remark,omitempty"`
+	Selected         int    `json:"selected,omitempty"`
+	StorageLocationCode string `json:"storageLocationCode,omitempty"`
+	GoodQuantity     int    `json:"goodQuantity,omitempty"`
+	BadQuantity      int    `json:"badQuantity,omitempty"`
 }
 
 // SkuInventory represents the current inventory state for a SKU in a warehouse.
 type SkuInventory struct {
-	Sku              string `json:"sku"`
-	SkuName          string `json:"skuName,omitempty"`
-	Warehouse        string `json:"warehouse"`
-	WarehouseCode    string `json:"warehouseCode,omitempty"`
-	Total            int    `json:"total"`
-	Available        int    `json:"available"`
-	Allocated        int    `json:"allocated"`
-	Unavailable      int    `json:"unavailable,omitempty"`
-	ShippingQuantity int    `json:"shippingQuantity,omitempty"`
+	Sku                  string `json:"sku"`
+	SkuName              string `json:"skuName,omitempty"`
+	Warehouse            string `json:"warehouse"`
+	WarehouseCode        string `json:"warehouseCode,omitempty"`
+	Total                int    `json:"total"`
+	Available            int    `json:"available"`
+	Allocated            int    `json:"allocated"`
+	Unavailable          int    `json:"unavailable,omitempty"`
+	ShippingQuantity     int    `json:"shippingQuantity,omitempty"`
+	PurchaseShippingQuantity int `json:"purchaseShippingQuantity,omitempty"`
+	FirstLegShippingQuantity int `json:"firstLegShippingQuantity,omitempty"`
+	TransferShippingQuantity int `json:"transferShippingQuantity,omitempty"`
+	OrderAllocated       int    `json:"orderAllocated,omitempty"`
+	FirstLegAllocated    int    `json:"firstLegAllocated,omitempty"`
+	TransferAllocated    int    `json:"transferAllocated,omitempty"`
+	TotalCost            float64 `json:"totalCost,omitempty"`
+	AvailableCost        float64 `json:"availableCost,omitempty"`
+}
+
+// AsnOrder represents an inbound order (ASN) in QERP.
+type AsnOrder struct {
+	AsnNumber            string        `json:"asnNumber"`
+	BusinessNumber       string        `json:"businessNumber,omitempty"`
+	CustomNumber         string        `json:"customNumber,omitempty"`
+	TrackNumber          string        `json:"trackNumber,omitempty"`
+	WarehouseName        string        `json:"warehouseName"`
+	Type                 string        `json:"type"`
+	Status               string        `json:"status"`
+	Remark               string        `json:"remark,omitempty"`
+	CreateTime           string        `json:"createTime"`
+	UpdateTime           string        `json:"updateTime,omitempty"`
+	StockInTime          string        `json:"stockInTime,omitempty"`
+	FinishTime           string        `json:"finishTime,omitempty"`
+	PurchasePriceCurrency string       `json:"purchasePriceCurrency,omitempty"`
+	AsnSkuVOList         []AsnSkuItem  `json:"asnSkuVOList,omitempty"`
+}
+
+// AsnSkuItem represents a SKU line within an inbound order.
+type AsnSkuItem struct {
+	Sku            string  `json:"sku"`
+	Title          string  `json:"title,omitempty"`
+	PurchasePrice  float64 `json:"purchasePrice"`
+	FirstLegPrice  float64 `json:"firstLegPrice,omitempty"`
+	TransferPrice  float64 `json:"transferPrice,omitempty"`
+	ExpectQuantity int64   `json:"expectQuantity"`
+	ReceiveQuantity int64  `json:"receiveQuantity,omitempty"`
+	GoodNum        int64   `json:"goodNum,omitempty"`
+	DamageNum      int64   `json:"damageNum,omitempty"`
+}
+
+// OdoOrder represents an outbound delivery order in QERP.
+type OdoOrder struct {
+	Number        string       `json:"number"`
+	CustomNumber  string       `json:"customNumber,omitempty"`
+	TrackNumber   string       `json:"trackNumber,omitempty"`
+	WarehouseName string       `json:"warehouseName"`
+	Type          string       `json:"type"`
+	Status        string       `json:"status"`
+	Remark        string       `json:"remark,omitempty"`
+	CreateTime    string       `json:"createTime"`
+	FinishTime    string       `json:"finishTime,omitempty"`
+	OdoSkuVOList  []OdoSkuItem `json:"odoSkuVOList,omitempty"`
+}
+
+// OdoSkuItem represents a SKU line within an outbound order.
+type OdoSkuItem struct {
+	Sku                string `json:"sku"`
+	Title              string `json:"title,omitempty"`
+	StorageLocationCode string `json:"storageLocationCode"`
+	ReceiveNumber      string `json:"receiveNumber,omitempty"`
+	Quantity           int64  `json:"quantity"`
+	UnavailableQuantity int64 `json:"unavailableQuantity,omitempty"`
+}
+
+// AdjustmentOrder represents an inventory adjustment order.
+type AdjustmentOrder struct {
+	AdjustmentNumber   string           `json:"adjustmentNumber"`
+	Source             string           `json:"source"`
+	AutoSource         string           `json:"autoSource,omitempty"`
+	WarehouseName      string           `json:"warehouseName"`
+	Remark             string           `json:"remark,omitempty"`
+	CreateTime         string           `json:"createTime"`
+	AdjustmentSkuList  []AdjustmentSku  `json:"adjustmentSkuVOList,omitempty"`
+}
+
+// AdjustmentSku represents a SKU line within an adjustment order.
+type AdjustmentSku struct {
+	Sku               string `json:"sku"`
+	Title             string `json:"title,omitempty"`
+	StorageLocationCode string `json:"storageLocationCode,omitempty"`
+	AvailableQuantity int64  `json:"availableQuantity"`
+	AllocatedQuantity int64  `json:"allocatedQuantity"`
+	TotalQuantity     int64  `json:"totalQuantity"`
+	TotalAfter        int64  `json:"totalAfter"`
+	Difference        int64  `json:"difference"`
+	AvailableAfter    int64  `json:"availableAfter"`
+}
+
+// PurchaseOrder represents a purchase order in QERP.
+type PurchaseOrder struct {
+	PurchaseNumber     string             `json:"purchaseNumber"`
+	AsnNumber          string             `json:"asnNumber,omitempty"`
+	CustomNumber       string             `json:"customNumber,omitempty"`
+	WarehouseName      string             `json:"warehouseName"`
+	PurchaseType       string             `json:"purchaseType"`
+	SupplierName       string             `json:"supplierName"`
+	SettlementType     string             `json:"settlementType"`
+	PurchasePriceUnit  string             `json:"purchasePriceUnit"`
+	PaymentType        string             `json:"paymentType"`
+	TransportParty     string             `json:"transportParty"`
+	TransportMode      string             `json:"transportMode"`
+	Status             string             `json:"status"`
+	CreateTime         string             `json:"createTime"`
+	UpdateTime         string             `json:"updateTime"`
+	Remark             string             `json:"remark,omitempty"`
+	SkuList            []PurchaseSkuItem  `json:"skuList,omitempty"`
+}
+
+// PurchaseSkuItem represents a SKU line within a purchase order.
+type PurchaseSkuItem struct {
+	Sku              string  `json:"sku"`
+	Title            string  `json:"title,omitempty"`
+	PurchasePrice    float64 `json:"purchasePrice"`
+	PurchaseQuantity int64   `json:"purchaseQuantity"`
+	PackSpecification int64  `json:"packSpecification,omitempty"`
+	TaxRate          float64 `json:"taxRate"`
+}
+
+// CustomFieldValue represents a custom field value.
+type CustomFieldValue struct {
+	CustomFieldID int64  `json:"customFieldId"`
+	Value         string `json:"value"`
+}
+
+// CustomField represents a custom field definition.
+type CustomField struct {
+	ID             int64    `json:"id,omitempty"`
+	TableName      string   `json:"tableName"`
+	ColumType      string   `json:"columType"`
+	ColumName      string   `json:"columName"`
+	DefaultValue   string   `json:"defaultValue,omitempty"`
+	CandidateValue []string `json:"candidateValue,omitempty"`
+	Remark         string   `json:"remark,omitempty"`
+	Required       int      `json:"required,omitempty"`
+	IsQuery        int      `json:"isQuery,omitempty"`
+	IsShow         int      `json:"isShow,omitempty"`
 }
