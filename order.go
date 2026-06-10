@@ -14,26 +14,26 @@ func NewOrderService(client *Client) *OrderService {
 
 // CreateOrderParams holds the parameters for creating a sales order.
 type CreateOrderParams struct {
-	Shop                string     `json:"shop"`
-	OnlineOrderNumber   string     `json:"onlineOrderNumber"`
-	PaymentMethod       string     `json:"paymentMethod"`
-	Currency            string     `json:"currency"`
-	PayTime             string     `json:"payTime"`
-	Buyer               *Buyer     `json:"buyer"`
-	SkuList             []OrderSku `json:"skuList"`
-	Freight             float64    `json:"freight,omitempty"`
-	CodPayAmount        float64    `json:"codPayAmount,omitempty"`
-	BuyerMessage        string     `json:"buyerMessage,omitempty"`
-	SellerRemarks       string     `json:"sellerRemarks,omitempty"`
-	LogisticsSelected   string     `json:"logisticsSelected,omitempty"`
-	TrackingNumber      string     `json:"trackingNumber,omitempty"`
-	IsSpecifyBatch      bool       `json:"isSpecifyBatch,omitempty"`
-	ShippingLabel       string     `json:"shippingLabel,omitempty"`
-	ImgType             string     `json:"imgType,omitempty"`
-	DocumentFile        string     `json:"documentFile,omitempty"`
-	DocumentType        string     `json:"documentType,omitempty"`
-	DocumentName        string     `json:"documentName,omitempty"`
-	CustomerType        string     `json:"customerType,omitempty"`
+	Shop                string            `json:"shop"`
+	OnlineOrderNumber   string            `json:"onlineOrderNumber"`
+	PaymentMethod       string            `json:"paymentMethod"`
+	Currency            string            `json:"currency"`
+	PayTime             string            `json:"payTime"`
+	Buyer               *Buyer            `json:"buyer"`
+	SkuList             []OrderSku        `json:"skuList"`
+	Freight             float64           `json:"freight,omitempty"`
+	CodPayAmount        float64           `json:"codPayAmount,omitempty"`
+	BuyerMessage        string            `json:"buyerMessage,omitempty"`
+	SellerRemarks       string            `json:"sellerRemarks,omitempty"`
+	LogisticsSelected   string            `json:"logisticsSelected,omitempty"`
+	TrackingNumber      string            `json:"trackingNumber,omitempty"`
+	IsSpecifyBatch      bool              `json:"isSpecifyBatch,omitempty"`
+	ShippingLabel       string            `json:"shippingLabel,omitempty"`
+	ImgType             string            `json:"imgType,omitempty"`
+	DocumentFile        string            `json:"documentFile,omitempty"`
+	DocumentType        string            `json:"documentType,omitempty"`
+	DocumentName        string            `json:"documentName,omitempty"`
+	CustomerType        string            `json:"customerType,omitempty"`
 	OrderCustomFieldValues []CustomFieldValue `json:"orderCustomFieldValueVOList,omitempty"`
 }
 

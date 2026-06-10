@@ -151,16 +151,37 @@ type Buyer struct {
 
 // OrderSku represents a product line item within a sales order.
 type OrderSku struct {
-	Sku               string  `json:"sku"`
-	PayAmount         float64 `json:"payAmount,omitempty"`
-	PaymentPrice      float64 `json:"paymentPrice,omitempty"`
-	Quantity          int     `json:"quantity"`
-	ShippingPrice     float64 `json:"shippingPrice,omitempty"`
-	PromotionDiscount float64 `json:"promotionDiscount,omitempty"`
-	BatchNo           string  `json:"batchNo,omitempty"`
-	MfgDate           string  `json:"mfgDate,omitempty"`
-	ExpDate           string  `json:"expDate,omitempty"`
-	OriginCountry     string  `json:"originCountry,omitempty"`
+	Sku               string       `json:"sku"`
+	PayAmount         float64      `json:"payAmount,omitempty"`
+	PaymentPrice      float64      `json:"paymentPrice,omitempty"`
+	Quantity          int          `json:"quantity"`
+	ShippingPrice     float64      `json:"shippingPrice,omitempty"`
+	PromotionDiscount float64      `json:"promotionDiscount,omitempty"`
+	BatchNo           string       `json:"batchNo,omitempty"`
+	MfgDate           string       `json:"mfgDate,omitempty"`
+	ExpDate           string       `json:"expDate,omitempty"`
+	OriginCountry     string       `json:"originCountry,omitempty"`
+	// Response-only fields
+	OrderSkuID        int64        `json:"orderSkuId,omitempty"`
+	OnlineItemID      string       `json:"onlineItemId,omitempty"`
+	OnlineProductCode string       `json:"onlineProductCode,omitempty"`
+	OnlineProductPicURL string     `json:"onlineProductPicUrl,omitempty"`
+	OnlineProductTitle string      `json:"onlineProductTitle,omitempty"`
+	OnlineTransactionID string     `json:"onlineTransactionId,omitempty"`
+	OriginalPrice     float64      `json:"originalPrice,omitempty"`
+	PlatformDiscount  float64      `json:"platformDiscount,omitempty"`
+	DiscountPrice     float64      `json:"discountPrice,omitempty"`
+	SubSkuList        []SubSkuDTO  `json:"subSkuList,omitempty"`
+	Tag               *OrderSkuTag `json:"tag,omitempty"`
+}
+
+// OrderSkuTag represents flags on an order SKU line.
+type OrderSkuTag struct {
+	AllReturned  int `json:"allReturned,omitempty"`
+	HasRefund    int `json:"hasRefund,omitempty"`
+	IsGift       int `json:"isGift,omitempty"`
+	OnlineShipped int `json:"onlineShipped,omitempty"`
+	PreSale      int `json:"preSale,omitempty"`
 }
 
 // OrderTag represents flags/tags on a sales order.
@@ -186,38 +207,52 @@ type OrderTag struct {
 
 // Order represents a sales order in QERP.
 type Order struct {
-	OrderNumber              string     `json:"orderNumber"`
-	OnlineOrderNumber        string     `json:"onlineOrderNumber,omitempty"`
-	ParentOrderNumber        string     `json:"parentOrderNumber,omitempty"`
-	SubOrderNumberList       []string   `json:"subOrderNumberList,omitempty"`
-	IsOriginalOrder          bool       `json:"isOriginalOrder,omitempty"`
-	Shop                     string     `json:"shop"`
-	ShopID                   int64      `json:"shopId,omitempty"`
-	Warehouse                string     `json:"warehouse,omitempty"`
-	Status                   string     `json:"status"`
-	WMSStatus                string     `json:"wmsStatus,omitempty"`
-	Currency                 string     `json:"currency"`
-	TotalAmount              float64    `json:"totalAmount"`
-	Freight                  float64    `json:"freight,omitempty"`
-	Platform                 string     `json:"platform"`
-	Carrier                  string     `json:"carrier,omitempty"`
-	TrackingNumber           string     `json:"trackingNumber,omitempty"`
-	PayTime                  int64      `json:"payTime,omitempty"`
-	ShippingTime             int64      `json:"shippingTime,omitempty"`
-	CreateTime               int64      `json:"createTime"`
-	UpdateTime               int64      `json:"updateTime"`
-	AuditTime                int64      `json:"auditTime,omitempty"`
-	Buyer                    *Buyer     `json:"buyer,omitempty"`
-	SkuList                  []OrderSku `json:"skuList,omitempty"`
-	Tag                      *OrderTag  `json:"tag,omitempty"`
-	BuyerMessage             string     `json:"buyerMessage,omitempty"`
-	SellerRemarks            string     `json:"sellerRemarks,omitempty"`
-	PaymentMethod            string     `json:"paymentMethod,omitempty"`
-	LogisticsSelected        string     `json:"logisticsSelected,omitempty"`
-	OnlineStatus             string     `json:"onlineStatus,omitempty"`
-	SiteCode                 string     `json:"siteCode,omitempty"`
-	IsDeleted                int        `json:"isDeleted,omitempty"`
-	SalesRecordNumber        string     `json:"salesRecordNumber,omitempty"`
+	OrderNumber              string            `json:"orderNumber"`
+	OnlineOrderNumber        string            `json:"onlineOrderNumber,omitempty"`
+	ParentOrderNumber        string            `json:"parentOrderNumber,omitempty"`
+	SubOrderNumberList       []string          `json:"subOrderNumberList,omitempty"`
+	IsOriginalOrder          bool              `json:"isOriginalOrder,omitempty"`
+	Shop                     string            `json:"shop"`
+	ShopID                   int64             `json:"shopId,omitempty"`
+	Warehouse                string            `json:"warehouse,omitempty"`
+	Status                   string            `json:"status"`
+	WMSStatus                string            `json:"wmsStatus,omitempty"`
+	Currency                 string            `json:"currency"`
+	TotalAmount              float64           `json:"totalAmount"`
+	Freight                  float64           `json:"freight,omitempty"`
+	Platform                 string            `json:"platform"`
+	Carrier                  string            `json:"carrier,omitempty"`
+	TrackingNumber           string            `json:"trackingNumber,omitempty"`
+	PayTime                  int64             `json:"payTime,omitempty"`
+	ShippingTime             int64             `json:"shippingTime,omitempty"`
+	CreateTime               int64             `json:"createTime"`
+	UpdateTime               int64             `json:"updateTime"`
+	AuditTime                int64             `json:"auditTime,omitempty"`
+	LatestShipDate           int64             `json:"latestShipDate,omitempty"`
+	PlatformShippingTime     int64             `json:"platformShippingTime,omitempty"`
+	Buyer                    *Buyer            `json:"buyer,omitempty"`
+	SkuList                  []OrderSku        `json:"skuList,omitempty"`
+	Tag                      *OrderTag         `json:"tag,omitempty"`
+	BuyerMessage             string            `json:"buyerMessage,omitempty"`
+	SellerRemarks            string            `json:"sellerRemarks,omitempty"`
+	PaymentMethod            string            `json:"paymentMethod,omitempty"`
+	LogisticsSelected        string            `json:"logisticsSelected,omitempty"`
+	OnlineStatus             string            `json:"onlineStatus,omitempty"`
+	SiteCode                 string            `json:"siteCode,omitempty"`
+	IsDeleted                int               `json:"isDeleted,omitempty"`
+	SalesRecordNumber        string            `json:"salesRecordNumber,omitempty"`
+	IsAFN                    int               `json:"isAfn,omitempty"`
+	IsBusinessOrder          bool              `json:"isBusinessOrder,omitempty"`
+	EstimateFulfillmentFee   float64           `json:"estimateFulfillmentFee,omitempty"`
+	TotalDiscount            float64           `json:"totalDiscount,omitempty"`
+	SellerDiscount           float64           `json:"sellerDiscount,omitempty"`
+	PlatformRebate           float64           `json:"platformRebate,omitempty"`
+	BuyerPaidShippingFee     float64           `json:"buyerPaidShippingFee,omitempty"`
+	FinalProductProtection   float64           `json:"finalProductProtection,omitempty"`
+	SellerDiscountForWook    float64           `json:"sellerDiscountForWook,omitempty"`
+	PlatformRebateForWook    float64           `json:"platformRebateForWook,omitempty"`
+	PlatformReturnToSeller   float64           `json:"platformReturnToSeller,omitempty"`
+	OrderCustomFieldValueVOList []CustomField  `json:"orderCustomFieldValueVOList,omitempty"`
 }
 
 // ReturnOrder represents a refund/return order in QERP.
