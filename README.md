@@ -73,23 +73,24 @@ qianyi.WithBaseURL("https://asia.qianyierp.com") // 海外生产
 
 ---
 
-## 服务列表
+## 服务列表 / Services
 
-| 服务 | 文件 | 操作 |
-|------|------|------|
-| `sdk.Shop` 店铺 | `shop.go` | 查询店铺列表 |
-| `sdk.Sku` 商品 | `sku.go` | 查询、创建、更新、启禁用、系统SKU查询 |
-| `sdk.Order` 订单 | `order.go` | 创建、取消、查询列表、查询单号列表 |
-| `sdk.Refund` 退款/退货 | `refund.go` | 创建、取消、查询列表 |
-| `sdk.Warehouse` 仓库 | `warehouse.go` | 查询仓库列表 |
-| `sdk.Inventory` 库存 | `inventory.go` | 查询库存(V2)、查询库存日志 |
-| `sdk.Asn` 入库单 | `asn.go` | 创建、查询列表、关闭 |
-| `sdk.Odo` 出库单 | `odo.go` | 查询列表、关闭 |
-| `sdk.Adjust` 调整单 | `adjust.go` | 查询列表、创建 |
-| `sdk.Purchase` 采购 | `purchase.go` | 查询列表、创建、更新 |
-| `sdk.Logistics` 物流 | `logistics.go` | 查询渠道、查询轨迹 |
-| `sdk.Report` 报表 | `report.go` | 查询报表列表、查询销售报表 |
-| `sdk.CustomerField` 自定义字段 | `customerfield.go` | 查询自定义字段 |
+| 服务 | 方法数 | 操作 |
+|------|--------|------|
+| `sdk.Shop` 店铺 | 1 | 查询店铺列表 |
+| `sdk.Sku` 商品 | 5 | 查询(含筛选)、创建、更新、启禁用、系统SKU |
+| `sdk.Order` 订单 | 13 | 创建、取消、查询、查单号、发货信息、审核、波次、发WMS、原始单、揽收、单据、订阅 |
+| `sdk.Refund` 退款/退货 | 4 | 创建、取消、查询、推送状态 |
+| `sdk.Warehouse` 仓库 | 1 | 查询仓库列表 |
+| `sdk.Inventory` 库存 | 12 | V1/V2查询、日志、加工单、调拨、拆分、库位库存、批次、SBS |
+| `sdk.Asn` 入库单 | 6 | 创建、查询、取消、删除、推送、批号查询 |
+| `sdk.Odo` 出库单 | 5 | 查询、创建、取消、销售出库、推送 |
+| `sdk.Adjust` 调整单 | 2 | 查询、创建 |
+| `sdk.Purchase` 采购 | 3 | 查询、创建、更新(含1688) |
+| `sdk.Logistics` 头程物流 | 6 | 查询、创建、查物流商、追踪、撤单、推送追踪 |
+| `sdk.Report` 报表 | 8 | Shopee/Lazada/TikTok交易、Shopee提现、Lazada账户、库存日报 |
+| `sdk.CustomerField` 自定义字段 | 1 | 查自定义字段定义 |
+| **合计** | **66** | 全部返回完整结构体，零 `any` |
 
 ---
 

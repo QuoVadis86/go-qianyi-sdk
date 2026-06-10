@@ -24,6 +24,7 @@ type CreateRefundParams struct {
 	AutoCommit    *bool       `json:"autoCommit,omitempty"`
 	ExpectArriveTime string   `json:"expectArriveTime,omitempty"`
 	ReturnSkuList []ReturnSku `json:"returnSkuList"`
+	RefundCustomFieldValueList []CustomFieldValue `json:"refundCustomFieldValueVOList,omitempty"`
 }
 
 // Create creates a new refund/return order in QERP.
@@ -59,9 +60,15 @@ type RefundQueryParams struct {
 	ToCreateTime   string `json:"toCreateTime,omitempty"`
 	UpdateTimeFrom string `json:"updateTimeFrom,omitempty"`
 	UpdateTimeTo   string `json:"updateTimeTo,omitempty"`
+	FinishTimeFrom string `json:"finishTimeFrom,omitempty"`
+	FinishTimeTo   string `json:"finishTimeTo,omitempty"`
+	ReceiveTimeFrom string `json:"receiveTimeFrom,omitempty"`
+	ReceiveTimeTo   string `json:"receiveTimeTo,omitempty"`
 	ShopIDList     []int64 `json:"shopIdList,omitempty"`
+	ShopGroupIDList []int64 `json:"shopGroupIdList,omitempty"`
 	OrderStatus    string `json:"orderStatus,omitempty"`
 	WithoutType    *bool   `json:"withoutType,omitempty"`
+	WithCommitTime *bool   `json:"withCommitTime,omitempty"`
 }
 
 // QueryList retrieves a paginated list of refund orders with optional filters.

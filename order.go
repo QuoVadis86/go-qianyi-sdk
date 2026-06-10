@@ -14,26 +14,26 @@ func NewOrderService(client *Client) *OrderService {
 
 // CreateOrderParams holds the parameters for creating a sales order.
 type CreateOrderParams struct {
-	Shop                string     `json:"shop"`
-	OnlineOrderNumber   string     `json:"onlineOrderNumber"`
-	PaymentMethod       string     `json:"paymentMethod"`
-	Currency            string     `json:"currency"`
-	PayTime             string     `json:"payTime"`
-	Buyer               *Buyer     `json:"buyer"`
-	SkuList             []OrderSku `json:"skuList"`
-	Freight             float64    `json:"freight,omitempty"`
-	CodPayAmount        float64    `json:"codPayAmount,omitempty"`
-	BuyerMessage        string     `json:"buyerMessage,omitempty"`
-	SellerRemarks       string     `json:"sellerRemarks,omitempty"`
-	LogisticsSelected   string     `json:"logisticsSelected,omitempty"`
-	TrackingNumber      string     `json:"trackingNumber,omitempty"`
-	IsSpecifyBatch      bool       `json:"isSpecifyBatch,omitempty"`
-	ShippingLabel       string     `json:"shippingLabel,omitempty"`
-	ImgType             string     `json:"imgType,omitempty"`
-	DocumentFile        string     `json:"documentFile,omitempty"`
-	DocumentType        string     `json:"documentType,omitempty"`
-	DocumentName        string     `json:"documentName,omitempty"`
-	CustomerType        string     `json:"customerType,omitempty"`
+	Shop                string            `json:"shop"`
+	OnlineOrderNumber   string            `json:"onlineOrderNumber"`
+	PaymentMethod       string            `json:"paymentMethod"`
+	Currency            string            `json:"currency"`
+	PayTime             string            `json:"payTime"`
+	Buyer               *Buyer            `json:"buyer"`
+	SkuList             []OrderSku        `json:"skuList"`
+	Freight             float64           `json:"freight,omitempty"`
+	CodPayAmount        float64           `json:"codPayAmount,omitempty"`
+	BuyerMessage        string            `json:"buyerMessage,omitempty"`
+	SellerRemarks       string            `json:"sellerRemarks,omitempty"`
+	LogisticsSelected   string            `json:"logisticsSelected,omitempty"`
+	TrackingNumber      string            `json:"trackingNumber,omitempty"`
+	IsSpecifyBatch      bool              `json:"isSpecifyBatch,omitempty"`
+	ShippingLabel       string            `json:"shippingLabel,omitempty"`
+	ImgType             string            `json:"imgType,omitempty"`
+	DocumentFile        string            `json:"documentFile,omitempty"`
+	DocumentType        string            `json:"documentType,omitempty"`
+	DocumentName        string            `json:"documentName,omitempty"`
+	CustomerType        string            `json:"customerType,omitempty"`
 	OrderCustomFieldValues []CustomFieldValue `json:"orderCustomFieldValueVOList,omitempty"`
 }
 
@@ -205,4 +205,43 @@ func (s *OrderService) QueryOrderDocument(orderNumber string) error {
 	biz, _ := json.Marshal(params)
 	w := &ResponseWrapper{}
 	return s.client.Do("QUERY_SALES_ORDER_DOCUMENT", string(biz), w)
+}
+
+// SubscribeOrderItem represents an order to subscribe to.
+type SubscribeOrderItem struct {
+	OrderNumber string `json:"orderNumber"`
+}
+
+// SubscribeOrderParams holds parameters for subscribing to order status.
+type SubscribeOrderParams struct {
+	OrderType string              `json:"orderType"`
+	OrderList []SubscribeOrderItem `json:"orderList"`
+}
+
+// SubscribeOrderResult represents a subscription result item.
+type SubscribeOrderResult struct {
+	OrderNumber  string `json:"orderNumber"`
+	ErrorMessage string `json:"errorMessage"`
+}
+
+// SubscribeOrder subscribes to order status push notifications.
+func (s *OrderService) SubscribeOrder(orderType string, orderNumbers []string) ([]SubscribeOrderResult, error) {
+	list := make([]SubscribeOrderItem, len(orderNumbers))
+	for i, n := range orderNumbers {
+		list[i] = SubscribeOrderItem{OrderNumber: n}
+	}
+	params := SubscribeOrderParams{
+		OrderType: orderType,
+		OrderList: list,
+	}
+	biz, _ := json.Marshal(params)
+	var result []SubscribeOrderResult
+	w := &ResponseWrapper{Result: &result}
+	if err := s.client.Do("SUBSCRIBE_ORDER", string(biz), w); err != nil {
+		return nil, err
+	}
+	if w.HasError() {
+		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
+	}
+	return result, nil
 }

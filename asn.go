@@ -26,22 +26,29 @@ type AsnSku struct {
 	ExpDate        string  `json:"expDate,omitempty"`
 	OriginCountry  string  `json:"originCountry,omitempty"`
 	SkuNotes       string  `json:"skuNotes,omitempty"`
+	ApiCustom      string  `json:"apiCustom,omitempty"`
 }
 
 // CreateAsnParams holds the parameters for creating an inbound order.
 type CreateAsnParams struct {
-	WarehouseName          string           `json:"warehouseName"`
-	AsnSkuVOList           []AsnSku         `json:"asnSkuVOList"`
-	CustomNumber           string           `json:"customNumber,omitempty"`
-	TrackNumber            string           `json:"trackNumber,omitempty"`
-	Remark                 string           `json:"remark,omitempty"`
-	PurchasePriceCurrency  string           `json:"purchasePriceCurrency"`
-	FirstLegPriceCurrency  string           `json:"firstLegPriceCurrency,omitempty"`
-	TransferPriceCurrency  string           `json:"transferPriceCurrency,omitempty"`
-	SendWarehouseFlag      string           `json:"sendWarehouseFlag,omitempty"`
-	PreArriveTime          string           `json:"preArriveTime,omitempty"`
-	CustomerType           string           `json:"customerType,omitempty"`
-	IsSpecifyBatch         bool             `json:"isSpecifyBatch,omitempty"`
+	WarehouseName           string           `json:"warehouseName"`
+	AsnSkuVOList            []AsnSku         `json:"asnSkuVOList"`
+	CustomNumber            string           `json:"customNumber,omitempty"`
+	TrackNumber             string           `json:"trackNumber,omitempty"`
+	Remark                  string           `json:"remark,omitempty"`
+	PurchasePriceCurrency   string           `json:"purchasePriceCurrency"`
+	FirstLegPriceCurrency   string           `json:"firstLegPriceCurrency,omitempty"`
+	TransferPriceCurrency   string           `json:"transferPriceCurrency,omitempty"`
+	SendWarehouseFlag       string           `json:"sendWarehouseFlag,omitempty"`
+	PreArriveTime           string           `json:"preArriveTime,omitempty"`
+	ShippingType            string           `json:"shippingType,omitempty"`
+	ContainerModel          string           `json:"containerModel,omitempty"`
+	PackageType             string           `json:"packageType,omitempty"`
+	BoxCount                int              `json:"boxCount,omitempty"`
+	CustomerType            string           `json:"customerType,omitempty"`
+	IsSpecifyBatch          bool             `json:"isSpecifyBatch,omitempty"`
+	MergeDuplicateSkuLines  bool             `json:"mergeDuplicateSkuLines,omitempty"`
+	AsnCustomFieldValueList []CustomFieldValue `json:"asnCustomFieldValueVOList,omitempty"`
 }
 
 // Create creates a new inbound order (ASN) in QERP.
@@ -53,18 +60,19 @@ func (s *AsnService) Create(params *CreateAsnParams) error {
 
 // AsnQueryParams holds parameters for querying inbound orders.
 type AsnQueryParams struct {
-	Page          int    `json:"page"`
-	PageSize      int    `json:"pageSize"`
-	WarehouseName string `json:"warehouseName,omitempty"`
-	Type          string `json:"type,omitempty"`
-	Status        string `json:"status,omitempty"`
-	SkuKeyWord    string `json:"skuKeyWord,omitempty"`
-	Number        string `json:"number,omitempty"`
-	TrackNumber   string `json:"trackNumber,omitempty"`
-	TimeType      string `json:"timeType,omitempty"`
-	TimeFrom      string `json:"timeFrom,omitempty"`
-	TimeEnd       string `json:"timeEnd,omitempty"`
-	ReturnBatchInfo bool `json:"returnBatchInfo,omitempty"`
+	Page          int     `json:"page"`
+	PageSize      int     `json:"pageSize"`
+	WarehouseName string  `json:"warehouseName,omitempty"`
+	Type          string  `json:"type,omitempty"`
+	Status        string  `json:"status,omitempty"`
+	SkuKeyWord    string  `json:"skuKeyWord,omitempty"`
+	Number        string  `json:"number,omitempty"`
+	TrackNumber   string  `json:"trackNumber,omitempty"`
+	TimeType      string  `json:"timeType,omitempty"`
+	TimeFrom      string  `json:"timeFrom,omitempty"`
+	TimeEnd       string  `json:"timeEnd,omitempty"`
+	ReturnBatchInfo bool  `json:"returnBatchInfo,omitempty"`
+	Tag           *AsnTag `json:"tag,omitempty"`
 }
 
 // QueryList retrieves inbound orders with optional filters.
@@ -97,8 +105,50 @@ func (s *AsnService) Delete(asnNumber string) error {
 	return s.client.Do("DELETE_ASN_ORDER", string(biz), w)
 }
 
+// PushAsnParams holds the parameters for pushing inbound order status.
+type PushAsnParams struct {
+	AsnNumber    string             `json:"asnNumber"`
+	Status       string             `json:"status"`
+	TrackNumber  string             `json:"trackNumber,omitempty"`
+	FinishedTime int64              `json:"finishedTime,omitempty"`
+	CustomNumber string             `json:"customNumber,omitempty"`
+	SkuList      []PushAsnSku       `json:"skuList"`
+}
+
+// PushAsnSku represents a SKU receipt data in push notification.
+type PushAsnSku struct {
+	Sku      string `json:"sku"`
+	Quantity int64  `json:"quantity"`
+	BatchNo  string `json:"batchNo,omitempty"`
+	MfgDate  string `json:"mfgDate,omitempty"`
+	ExpDate  string `json:"expDate,omitempty"`
+}
+
+// PushOrder pushes inbound order receipt status notification.
+func (s *AsnService) PushOrder(params *PushAsnParams) error {
+	biz, _ := json.Marshal(params)
+	w := &ResponseWrapper{}
+	return s.client.Do("PUSH_ASN_ORDER", string(biz), w)
+}
+
+// AsnBatchRecord represents a batch record from ASN batch list query.
+type AsnBatchRecord struct {
+	ReceiveTimeFrom string `json:"receiveTimeFrom,omitempty"`
+	ReceiveTimeTo   string `json:"receiveTimeTo,omitempty"`
+	Sku             string `json:"sku,omitempty"`
+	SkuName         string `json:"skuName,omitempty"`
+	Title           string `json:"title,omitempty"`
+	WarehouseName   string `json:"warehouseName,omitempty"`
+	BatchNumber     string `json:"batchNumber,omitempty"`
+	Quantity        int64  `json:"quantity,omitempty"`
+	Available       int64  `json:"available,omitempty"`
+	MfgDate         string `json:"mfgDate,omitempty"`
+	ExpDate         string `json:"expDate,omitempty"`
+	OriginCountry   string `json:"originCountry,omitempty"`
+}
+
 // QueryBatchList queries inventory batch records for inbound orders.
-func (s *AsnService) QueryBatchList(receiveTimeFrom, receiveTimeTo string, page, pageSize int) ([]any, int, error) {
+func (s *AsnService) QueryBatchList(receiveTimeFrom, receiveTimeTo string, page, pageSize int) ([]AsnBatchRecord, int, error) {
 	params := map[string]any{
 		"receiveTimeFrom": receiveTimeFrom,
 		"receiveTimeTo":   receiveTimeTo,
@@ -106,7 +156,7 @@ func (s *AsnService) QueryBatchList(receiveTimeFrom, receiveTimeTo string, page,
 		"pageSize":       pageSize,
 	}
 	biz, _ := json.Marshal(params)
-	var list []any
+	var list []AsnBatchRecord
 	w := &ResponseWrapper{Result: &list}
 	if err := s.client.Do("QUERY_ASN_BATCH_LIST", string(biz), w); err != nil {
 		return nil, 0, err
