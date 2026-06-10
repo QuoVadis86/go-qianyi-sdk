@@ -131,8 +131,24 @@ func (s *AsnService) PushOrder(params *PushAsnParams) error {
 	return s.client.Do("PUSH_ASN_ORDER", string(biz), w)
 }
 
+// AsnBatchRecord represents a batch record from ASN batch list query.
+type AsnBatchRecord struct {
+	ReceiveTimeFrom string `json:"receiveTimeFrom,omitempty"`
+	ReceiveTimeTo   string `json:"receiveTimeTo,omitempty"`
+	Sku             string `json:"sku,omitempty"`
+	SkuName         string `json:"skuName,omitempty"`
+	Title           string `json:"title,omitempty"`
+	WarehouseName   string `json:"warehouseName,omitempty"`
+	BatchNumber     string `json:"batchNumber,omitempty"`
+	Quantity        int64  `json:"quantity,omitempty"`
+	Available       int64  `json:"available,omitempty"`
+	MfgDate         string `json:"mfgDate,omitempty"`
+	ExpDate         string `json:"expDate,omitempty"`
+	OriginCountry   string `json:"originCountry,omitempty"`
+}
+
 // QueryBatchList queries inventory batch records for inbound orders.
-func (s *AsnService) QueryBatchList(receiveTimeFrom, receiveTimeTo string, page, pageSize int) ([]any, int, error) {
+func (s *AsnService) QueryBatchList(receiveTimeFrom, receiveTimeTo string, page, pageSize int) ([]AsnBatchRecord, int, error) {
 	params := map[string]any{
 		"receiveTimeFrom": receiveTimeFrom,
 		"receiveTimeTo":   receiveTimeTo,
@@ -140,7 +156,7 @@ func (s *AsnService) QueryBatchList(receiveTimeFrom, receiveTimeTo string, page,
 		"pageSize":       pageSize,
 	}
 	biz, _ := json.Marshal(params)
-	var list []any
+	var list []AsnBatchRecord
 	w := &ResponseWrapper{Result: &list}
 	if err := s.client.Do("QUERY_ASN_BATCH_LIST", string(biz), w); err != nil {
 		return nil, 0, err

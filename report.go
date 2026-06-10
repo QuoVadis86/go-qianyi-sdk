@@ -209,10 +209,23 @@ type ShopeePayoutQuery struct {
 	PayoutTimeTo   string   `json:"payoutTimeTo"`
 }
 
+// ShopeePayoutDTO represents a Shopee payout record.
+type ShopeePayoutDTO struct {
+	ShopID       int64  `json:"shopId,omitempty"`
+	ShopName     string `json:"shopName,omitempty"`
+	PayoutTime   int64  `json:"payoutTime,omitempty"`
+	Currency     string `json:"currency,omitempty"`
+	Amount       float64 `json:"amount,omitempty"`
+	Status       string `json:"status,omitempty"`
+	Reference    string `json:"reference,omitempty"`
+	UpdateTime   int64  `json:"updateTime,omitempty"`
+	ShopTimeZone string `json:"shopTimeZone,omitempty"`
+}
+
 // QueryShopeePayout queries Shopee payout records.
-func (s *ReportService) QueryShopeePayout(params *ShopeePayoutQuery) ([]any, int, error) {
+func (s *ReportService) QueryShopeePayout(params *ShopeePayoutQuery) ([]ShopeePayoutDTO, int, error) {
 	biz, _ := json.Marshal(params)
-	var list []any
+	var list []ShopeePayoutDTO
 	w := &ResponseWrapper{Result: &list}
 	if err := s.client.Do("QUERY_SHOPEE_PAYOUT_DETAIL_LIST", string(biz), w); err != nil {
 		return nil, 0, err
@@ -223,10 +236,20 @@ func (s *ReportService) QueryShopeePayout(params *ShopeePayoutQuery) ([]any, int
 	return list, w.BizContent.Total, nil
 }
 
+// LazadaBalanceDTO represents a Lazada balance record.
+type LazadaBalanceDTO struct {
+	ShopID       int64   `json:"shopId,omitempty"`
+	ShopName     string  `json:"shopName,omitempty"`
+	Currency     string  `json:"currency,omitempty"`
+	Balance      float64 `json:"balance,omitempty"`
+	UpdateTime   int64   `json:"updateTime,omitempty"`
+	ShopTimeZone string  `json:"shopTimeZone,omitempty"`
+}
+
 // QueryLazadaBalance queries Lazada my balance.
-func (s *ReportService) QueryLazadaBalance(params *ReportPageParams) ([]any, int, error) {
+func (s *ReportService) QueryLazadaBalance(params *ReportPageParams) ([]LazadaBalanceDTO, int, error) {
 	biz, _ := json.Marshal(params)
-	var list []any
+	var list []LazadaBalanceDTO
 	w := &ResponseWrapper{Result: &list}
 	if err := s.client.Do("QUERY_LAZADA_MY_BALANCE", string(biz), w); err != nil {
 		return nil, 0, err
@@ -237,10 +260,26 @@ func (s *ReportService) QueryLazadaBalance(params *ReportPageParams) ([]any, int
 	return list, w.BizContent.Total, nil
 }
 
+// TiktokV2ReportDTO represents a TikTok V2 transaction detail.
+type TiktokV2ReportDTO struct {
+	ShopID          int64   `json:"shopId,omitempty"`
+	ShopName        string  `json:"shopName,omitempty"`
+	Currency        string  `json:"currency,omitempty"`
+	OrderID         string  `json:"orderId,omitempty"`
+	SettlementTime  int64   `json:"settlementTime,omitempty"`
+	PaymentAmount   float64 `json:"paymentAmount,omitempty"`
+	Commission      float64 `json:"commission,omitempty"`
+	ShippingFee     float64 `json:"shippingFee,omitempty"`
+	Refund          float64 `json:"refund,omitempty"`
+	SettlementAmount float64 `json:"settlementAmount,omitempty"`
+	UpdateTime      int64   `json:"updateTime,omitempty"`
+	ShopTimeZone    string  `json:"shopTimeZone,omitempty"`
+}
+
 // QueryTiktokV2Transaction queries TikTok V2 transaction details.
-func (s *ReportService) QueryTiktokV2Transaction(params *TiktokReportQuery) ([]any, int, error) {
+func (s *ReportService) QueryTiktokV2Transaction(params *TiktokReportQuery) ([]TiktokV2ReportDTO, int, error) {
 	biz, _ := json.Marshal(params)
-	var list []any
+	var list []TiktokV2ReportDTO
 	w := &ResponseWrapper{Result: &list}
 	if err := s.client.Do("QUERY_TIKTOK_V2_TRANSACTION_DETAIL_LIST", string(biz), w); err != nil {
 		return nil, 0, err
@@ -251,10 +290,23 @@ func (s *ReportService) QueryTiktokV2Transaction(params *TiktokReportQuery) ([]a
 	return list, w.BizContent.Total, nil
 }
 
+// TiktokPayoutDTO represents a TikTok payout record.
+type TiktokPayoutDTO struct {
+	ShopID       int64   `json:"shopId,omitempty"`
+	ShopName     string  `json:"shopName,omitempty"`
+	Currency     string  `json:"currency,omitempty"`
+	PayoutTime   int64   `json:"payoutTime,omitempty"`
+	Amount       float64 `json:"amount,omitempty"`
+	Status       string  `json:"status,omitempty"`
+	Reference    string  `json:"reference,omitempty"`
+	UpdateTime   int64   `json:"updateTime,omitempty"`
+	ShopTimeZone string  `json:"shopTimeZone,omitempty"`
+}
+
 // QueryTiktokPayout queries TikTok payout records.
-func (s *ReportService) QueryTiktokPayout(params *ReportPageParams) ([]any, int, error) {
+func (s *ReportService) QueryTiktokPayout(params *ReportPageParams) ([]TiktokPayoutDTO, int, error) {
 	biz, _ := json.Marshal(params)
-	var list []any
+	var list []TiktokPayoutDTO
 	w := &ResponseWrapper{Result: &list}
 	if err := s.client.Do("QUERY_TIKTOK_PAYOUT_RECORD", string(biz), w); err != nil {
 		return nil, 0, err
@@ -274,10 +326,23 @@ type InventoryDailyReportQuery struct {
 	ShopIDList []int64  `json:"shopIdList,omitempty"`
 }
 
+// InventoryDailyReportDTO represents an inventory daily statement record.
+type InventoryDailyReportDTO struct {
+	Sku         string `json:"sku,omitempty"`
+	SkuName     string `json:"skuName,omitempty"`
+	Warehouse   string `json:"warehouse,omitempty"`
+	Date        string `json:"date,omitempty"`
+	BeginQty    int64  `json:"beginQty,omitempty"`
+	InQty       int64  `json:"inQty,omitempty"`
+	OutQty      int64  `json:"outQty,omitempty"`
+	EndQty      int64  `json:"endQty,omitempty"`
+	UpdateTime  int64  `json:"updateTime,omitempty"`
+}
+
 // QueryInventoryDailyReport queries inventory daily statement.
-func (s *ReportService) QueryInventoryDailyReport(params *InventoryDailyReportQuery) ([]any, int, error) {
+func (s *ReportService) QueryInventoryDailyReport(params *InventoryDailyReportQuery) ([]InventoryDailyReportDTO, int, error) {
 	biz, _ := json.Marshal(params)
-	var list []any
+	var list []InventoryDailyReportDTO
 	w := &ResponseWrapper{Result: &list}
 	if err := s.client.Do("QUERY_INVENTORY_DAILY_REPORT", string(biz), w); err != nil {
 		return nil, 0, err

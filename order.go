@@ -218,8 +218,14 @@ type SubscribeOrderParams struct {
 	OrderList []SubscribeOrderItem `json:"orderList"`
 }
 
+// SubscribeOrderResult represents a subscription result item.
+type SubscribeOrderResult struct {
+	OrderNumber  string `json:"orderNumber"`
+	ErrorMessage string `json:"errorMessage"`
+}
+
 // SubscribeOrder subscribes to order status push notifications.
-func (s *OrderService) SubscribeOrder(orderType string, orderNumbers []string) ([]any, error) {
+func (s *OrderService) SubscribeOrder(orderType string, orderNumbers []string) ([]SubscribeOrderResult, error) {
 	list := make([]SubscribeOrderItem, len(orderNumbers))
 	for i, n := range orderNumbers {
 		list[i] = SubscribeOrderItem{OrderNumber: n}
@@ -229,7 +235,7 @@ func (s *OrderService) SubscribeOrder(orderType string, orderNumbers []string) (
 		OrderList: list,
 	}
 	biz, _ := json.Marshal(params)
-	var result []any
+	var result []SubscribeOrderResult
 	w := &ResponseWrapper{Result: &result}
 	if err := s.client.Do("SUBSCRIBE_ORDER", string(biz), w); err != nil {
 		return nil, err
