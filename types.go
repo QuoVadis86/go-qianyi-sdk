@@ -16,13 +16,15 @@ type BaseResponse struct {
 }
 
 // IsSuccess returns true when the API call succeeded (state=success, no error).
+// The API may return errorCode as either "0" or "" to indicate success.
 func (r *BaseResponse) IsSuccess() bool {
-	return r.State == "success" && r.ErrorCode == ""
+	return r.State == "success" && (r.ErrorCode == "" || r.ErrorCode == "0")
 }
 
 // HasError returns true when the API returned an error or failure state.
+// An errorCode of "0" is treated as success (not an error).
 func (r *BaseResponse) HasError() bool {
-	return r.ErrorCode != "" || r.State == "failure"
+	return (r.ErrorCode != "" && r.ErrorCode != "0") || r.State == "failure"
 }
 
 // BizContent holds the parsed business data from a QERP API response.

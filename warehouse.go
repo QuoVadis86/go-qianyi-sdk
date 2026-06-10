@@ -21,5 +21,5 @@ func (s *WarehouseService) QueryList(ctx context.Context, page, pageSize int, st
 	if name != "" {
 		params["name"] = name
 	}
-	return doList[Warehouse](ctx, s.client, "QUERY_WAREHOUSE_LIST", params)
+	return doList[Warehouse](ctx, s.client, ServiceTypeQueryWarehouseList, params)
 }

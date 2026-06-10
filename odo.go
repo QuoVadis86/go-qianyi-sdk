@@ -34,7 +34,7 @@ type OdoQueryParams struct {
 
 // QueryList retrieves outbound delivery orders with optional filters.
 func (s *OdoService) QueryList(ctx context.Context, params *OdoQueryParams) ([]OdoOrder, int, error) {
-	return doList[OdoOrder](ctx, s.client, "QUERY_ODO_LIST", params)
+	return doList[OdoOrder](ctx, s.client, ServiceTypeQueryOdoList, params)
 }
 
 // OdoReceiver holds recipient information for an outbound order.
@@ -83,12 +83,12 @@ type CreateOdoParams struct {
 
 // Create creates a new outbound delivery order in QERP.
 func (s *OdoService) Create(ctx context.Context, params *CreateOdoParams) error {
-	return doAction(ctx, s.client, "CREATE_ODO_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypeCreateOdoOrder, params)
 }
 
 // Cancel cancels an outbound delivery order by custom number.
 func (s *OdoService) Cancel(ctx context.Context, customNumber string) error {
-	return doAction(ctx, s.client, "CANCEL_ODO_ORDER", map[string]any{"customNumber": customNumber})
+	return doAction(ctx, s.client, ServiceTypeCancelOdoOrder, map[string]any{"customNumber": customNumber})
 }
 
 // PushOdoParams holds parameters for pushing outbound order status.
@@ -115,7 +115,7 @@ type PushOdoSku struct {
 
 // PushOrder pushes outbound delivery order status notification.
 func (s *OdoService) PushOrder(ctx context.Context, params *PushOdoParams) error {
-	return doAction(ctx, s.client, "PUSH_ODO_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypePushOdoOrder, params)
 }
 
 // QuerySalesList queries sales-related outbound orders.
@@ -126,5 +126,5 @@ func (s *OdoService) QuerySalesList(ctx context.Context, createTimeFrom, createT
 		"page":           page,
 		"pageSize":       pageSize,
 	}
-	return doList[OdoOrder](ctx, s.client, "QUERY_SALES_ODO_LIST", params)
+	return doList[OdoOrder](ctx, s.client, ServiceTypeQuerySalesOdoList, params)
 }

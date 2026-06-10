@@ -53,7 +53,7 @@ type CreateAsnParams struct {
 
 // Create creates a new inbound order (ASN) in QERP.
 func (s *AsnService) Create(ctx context.Context, params *CreateAsnParams) error {
-	return doAction(ctx, s.client, "CREATE_ASN_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypeCreateAsnOrder, params)
 }
 
 // AsnQueryParams holds parameters for querying inbound orders.
@@ -75,17 +75,17 @@ type AsnQueryParams struct {
 
 // QueryList retrieves inbound orders with optional filters.
 func (s *AsnService) QueryList(ctx context.Context, params *AsnQueryParams) ([]AsnOrder, int, error) {
-	return doList[AsnOrder](ctx, s.client, "QUERY_ASN_LIST", params)
+	return doList[AsnOrder](ctx, s.client, ServiceTypeQueryAsnList, params)
 }
 
 // Cancel cancels an inbound order by ASN number.
 func (s *AsnService) Cancel(ctx context.Context, asnNumber string) error {
-	return doAction(ctx, s.client, "CANCEL_ASN_ORDER", map[string]any{"asnNumber": asnNumber})
+	return doAction(ctx, s.client, ServiceTypeCancelAsnOrder, map[string]any{"asnNumber": asnNumber})
 }
 
 // Delete deletes an inbound order by ASN number.
 func (s *AsnService) Delete(ctx context.Context, asnNumber string) error {
-	return doAction(ctx, s.client, "DELETE_ASN_ORDER", map[string]any{"asnNumber": asnNumber})
+	return doAction(ctx, s.client, ServiceTypeDeleteAsnOrder, map[string]any{"asnNumber": asnNumber})
 }
 
 // PushAsnParams holds the parameters for pushing inbound order status.
@@ -109,7 +109,7 @@ type PushAsnSku struct {
 
 // PushOrder pushes inbound order receipt status notification.
 func (s *AsnService) PushOrder(ctx context.Context, params *PushAsnParams) error {
-	return doAction(ctx, s.client, "PUSH_ASN_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypePushAsnOrder, params)
 }
 
 // AsnBatchRecord represents a batch record from ASN batch list query.
@@ -136,5 +136,5 @@ func (s *AsnService) QueryBatchList(ctx context.Context, receiveTimeFrom, receiv
 		"page":            page,
 		"pageSize":        pageSize,
 	}
-	return doList[AsnBatchRecord](ctx, s.client, "QUERY_ASN_BATCH_LIST", params)
+	return doList[AsnBatchRecord](ctx, s.client, ServiceTypeQueryAsnBatchList, params)
 }

@@ -42,12 +42,12 @@ type CreateOrderParams struct {
 
 // Create creates a new sales order in QERP.
 func (s *OrderService) Create(ctx context.Context, params *CreateOrderParams) (*Order, error) {
-	return doSingle[Order](ctx, s.client, "CREATE_SALES_ORDER", params)
+	return doSingle[Order](ctx, s.client, ServiceTypeCreateSalesOrder, params)
 }
 
 // Cancel cancels a sales order by online order number and shop name.
 func (s *OrderService) Cancel(ctx context.Context, onlineOrderNumber, shop string) error {
-	return doAction(ctx, s.client, "CLOSE_SALES_ORDER", map[string]any{"onlineOrderNumber": onlineOrderNumber, "shop": shop})
+	return doAction(ctx, s.client, ServiceTypeCloseSalesOrder, map[string]any{"onlineOrderNumber": onlineOrderNumber, "shop": shop})
 }
 
 // OrderQueryParams holds parameters for querying sales orders.
@@ -74,7 +74,7 @@ type OrderQueryParams struct {
 
 // QueryList retrieves a paginated list of sales orders with optional filters.
 func (s *OrderService) QueryList(ctx context.Context, params *OrderQueryParams) ([]Order, int, error) {
-	return doList[Order](ctx, s.client, "QUERY_SALES_ORDER_LIST", params)
+	return doList[Order](ctx, s.client, ServiceTypeQuerySalesOrderList, params)
 }
 
 // QueryNumberList retrieves a paginated list of sales order numbers.
@@ -92,7 +92,7 @@ func (s *OrderService) QueryNumberList(ctx context.Context, status, shop, fromPa
 	if toPayTime != "" {
 		params["toPayTime"] = toPayTime
 	}
-	return doList[string](ctx, s.client, "QUERY_SALES_ORDER_NUMBER_LIST", params)
+	return doList[string](ctx, s.client, ServiceTypeQuerySalesOrderNumberList, params)
 }
 
 // QueryShippingInfo queries the shipping information for a sales order.
@@ -104,7 +104,7 @@ func (s *OrderService) QueryShippingInfo(ctx context.Context, orderNumber string
 	}
 	var raw json.RawMessage
 	w := &ResponseWrapper{Result: &raw}
-	if err := s.client.Do(ctx, "QUERY_SALES_ORDER_SHIPPING_INFO", string(biz), w); err != nil {
+	if err := s.client.Do(ctx, ServiceTypeQuerySalesOrderShippingInfo, string(biz), w); err != nil {
 		return nil, err
 	}
 	if w.HasError() {
@@ -122,7 +122,7 @@ type AuditParams struct {
 
 // Audit audits a sales order.
 func (s *OrderService) Audit(ctx context.Context, params *AuditParams) error {
-	return doAction(ctx, s.client, "QUERY_SALES_ORDER_AUDIT", params)
+	return doAction(ctx, s.client, ServiceTypeQuerySalesOrderAudit, params)
 }
 
 // CreateWaveOrderParams holds parameters for creating a wave order.
@@ -133,7 +133,7 @@ type CreateWaveOrderParams struct {
 
 // CreateWaveOrder creates a wave order for batch picking.
 func (s *OrderService) CreateWaveOrder(ctx context.Context, params *CreateWaveOrderParams) error {
-	return doAction(ctx, s.client, "CREATE_WAVE_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypeCreateWaveOrder, params)
 }
 
 // SendToWmsParams holds parameters for sending an order to WMS.
@@ -145,13 +145,13 @@ type SendToWmsParams struct {
 
 // SendToWms sends a sales order to the warehouse management system.
 func (s *OrderService) SendToWms(ctx context.Context, params *SendToWmsParams) error {
-	return doAction(ctx, s.client, "SEND_SALES_ORDER_TO_WMS", params)
+	return doAction(ctx, s.client, ServiceTypeSendSalesOrderToWms, params)
 }
 
 // QueryOriginalOrder queries the original sales order by shop and online order number.
 func (s *OrderService) QueryOriginalOrder(ctx context.Context, shop, onlineOrderNumber string) (*Order, error) {
 	params := map[string]any{"shop": shop, "onlineOrderNumber": onlineOrderNumber}
-	return doSingle[Order](ctx, s.client, "QUERY_ORIGINAL_SALES_ORDER", params)
+	return doSingle[Order](ctx, s.client, ServiceTypeQueryOriginalSalesOrder, params)
 }
 
 // QueryPickupStatus queries the pickup status of a sales order.
@@ -163,7 +163,7 @@ func (s *OrderService) QueryPickupStatus(ctx context.Context, shop, onlineOrderN
 	}
 	var raw json.RawMessage
 	w := &ResponseWrapper{Result: &raw}
-	if err := s.client.Do(ctx, "QUERY_SALES_ORDER_PICKUP_STATUS", string(biz), w); err != nil {
+	if err := s.client.Do(ctx, ServiceTypeQuerySalesOrderPickupStatus, string(biz), w); err != nil {
 		return nil, err
 	}
 	if w.HasError() {
@@ -181,7 +181,7 @@ func (s *OrderService) QueryOrderDocument(ctx context.Context, orderNumber strin
 	}
 	var raw json.RawMessage
 	w := &ResponseWrapper{Result: &raw}
-	if err := s.client.Do(ctx, "QUERY_SALES_ORDER_DOCUMENT", string(biz), w); err != nil {
+	if err := s.client.Do(ctx, ServiceTypeQuerySalesOrderDocument, string(biz), w); err != nil {
 		return nil, err
 	}
 	if w.HasError() {
@@ -217,7 +217,7 @@ func (s *OrderService) SubscribeOrder(ctx context.Context, orderType string, ord
 		OrderType: orderType,
 		OrderList: list,
 	}
-	result, err := doSingle[[]SubscribeOrderResult](ctx, s.client, "SUBSCRIBE_ORDER", params)
+	result, err := doSingle[[]SubscribeOrderResult](ctx, s.client, ServiceTypeSubscribeOrder, params)
 	if err != nil {
 		return nil, err
 	}

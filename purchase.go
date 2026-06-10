@@ -25,7 +25,7 @@ type PurchaseQueryParams struct {
 
 // QueryList retrieves purchase orders with optional filters.
 func (s *PurchaseService) QueryList(ctx context.Context, params *PurchaseQueryParams) ([]PurchaseOrder, int, error) {
-	return doList[PurchaseOrder](ctx, s.client, "QUERY_PURCHASE_ORDER_LIST", params)
+	return doList[PurchaseOrder](ctx, s.client, ServiceTypeQueryPurchaseOrderList, params)
 }
 
 // PurchaseSkuInput represents a SKU line within a purchase order creation.
@@ -80,11 +80,13 @@ type CreatePurchaseParams struct {
 
 // Create creates a new purchase order in QERP.
 func (s *PurchaseService) Create(ctx context.Context, params *CreatePurchaseParams) error {
-	return doAction(ctx, s.client, "CREATE_PURCHASE_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypeCreatePurchaseOrder, params)
 }
 
 // Update updates an existing purchase order. Requires purchaseNumber and isUpdate=true.
+// Uses CREATE_PURCHASE_ORDER with isUpdate=true (the official API does not have a
+// separate UPDATE_PURCHASE_ORDER serviceType).
 func (s *PurchaseService) Update(ctx context.Context, params *CreatePurchaseParams) error {
 	params.IsUpdate = true
-	return doAction(ctx, s.client, "UPDATE_PURCHASE_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypeCreatePurchaseOrder, params)
 }

@@ -22,7 +22,7 @@ type InventoryQueryV1Params struct {
 
 // QueryListV1 retrieves inventory list using V1 API (deprecated).
 func (s *InventoryService) QueryListV1(ctx context.Context, params *InventoryQueryV1Params) ([]SkuInventory, int, error) {
-	return doList[SkuInventory](ctx, s.client, "QUERY_SIMPLE_LIST_INVENTORY", params)
+	return doList[SkuInventory](ctx, s.client, ServiceTypeQuerySimpleListInventory, params)
 }
 
 // InventoryQueryV2Params holds parameters for inventory V2 query.
@@ -40,7 +40,7 @@ type InventoryQueryV2Params struct {
 
 // QueryListV2 retrieves inventory list using V2 API.
 func (s *InventoryService) QueryListV2(ctx context.Context, params *InventoryQueryV2Params) ([]SkuInventory, int, error) {
-	return doList[SkuInventory](ctx, s.client, "QUERY_SIMPLE_LIST_INVENTORY_V2", params)
+	return doList[SkuInventory](ctx, s.client, ServiceTypeQuerySimpleListInventoryV2, params)
 }
 
 // InventoryLogQueryParams holds parameters for querying inventory change logs.
@@ -82,7 +82,7 @@ type InventoryLog struct {
 
 // QueryLogList retrieves inventory change logs.
 func (s *InventoryService) QueryLogList(ctx context.Context, params *InventoryLogQueryParams) ([]InventoryLog, int, error) {
-	return doList[InventoryLog](ctx, s.client, "QUERY_INVENTORY_LOG_LIST", params)
+	return doList[InventoryLog](ctx, s.client, ServiceTypeQueryInventoryLogList, params)
 }
 
 // AssemblyQueryParams holds params for querying assembly orders.
@@ -115,7 +115,7 @@ type AssemblySku struct {
 
 // QueryAssemblyList retrieves assembly orders.
 func (s *InventoryService) QueryAssemblyList(ctx context.Context, params *AssemblyQueryParams) ([]AssemblyOrder, int, error) {
-	return doList[AssemblyOrder](ctx, s.client, "QUERY_INVENTORY_ASSEMBLY_LIST", params)
+	return doList[AssemblyOrder](ctx, s.client, ServiceTypeQueryInventoryAssemblyList, params)
 }
 
 // CreateTransferOrderParams holds params for creating a transfer order.
@@ -128,7 +128,7 @@ type CreateTransferOrderParams struct {
 
 // CreateTransferOrder creates a transfer order between warehouses.
 func (s *InventoryService) CreateTransferOrder(ctx context.Context, params *CreateTransferOrderParams) error {
-	return doAction(ctx, s.client, "CREATE_TRANSFER_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypeCreateTransferOrder, params)
 }
 
 // TransferOrder represents a warehouse transfer order.
@@ -145,7 +145,7 @@ type TransferOrder struct {
 // QueryTransferOrderList queries transfer orders.
 func (s *InventoryService) QueryTransferOrderList(ctx context.Context, page, pageSize int) ([]TransferOrder, int, error) {
 	params := map[string]any{"page": page, "pageSize": pageSize}
-	return doList[TransferOrder](ctx, s.client, "QUERY_TRANSFER_ORDER_LIST", params)
+	return doList[TransferOrder](ctx, s.client, ServiceTypeQueryTransferOrderList, params)
 }
 
 // SplitOrder represents an order split record.
@@ -161,7 +161,7 @@ type SplitOrder struct {
 // QuerySplitOrderList queries split orders.
 func (s *InventoryService) QuerySplitOrderList(ctx context.Context, page, pageSize int) ([]SplitOrder, int, error) {
 	params := map[string]any{"page": page, "pageSize": pageSize}
-	return doList[SplitOrder](ctx, s.client, "QUERY_SPLIT_ORDER_LIST", params)
+	return doList[SplitOrder](ctx, s.client, ServiceTypeQuerySplitOrderList, params)
 }
 
 // StorageLocInventory represents inventory in a specific storage location.
@@ -180,7 +180,7 @@ func (s *InventoryService) QueryStorageLocInventory(ctx context.Context, warehou
 	if len(skuList) > 0 {
 		params["skuList"] = skuList
 	}
-	return doListNoTotal[StorageLocInventory](ctx, s.client, "QUERY_STORAGE_LOC_INVENTORY", params)
+	return doListNoTotal[StorageLocInventory](ctx, s.client, ServiceTypeQueryStorageLocInventory, params)
 }
 
 // BatchInventoryQueryParams holds parameters for batch inventory queries.
@@ -209,7 +209,7 @@ type BatchInventory struct {
 
 // QueryBatchInventoryList queries batch-level inventory records.
 func (s *InventoryService) QueryBatchInventoryList(ctx context.Context, params *BatchInventoryQueryParams) ([]BatchInventory, int, error) {
-	return doList[BatchInventory](ctx, s.client, "QUERY_BATCH_INVENTORY_LIST", params)
+	return doList[BatchInventory](ctx, s.client, ServiceTypeQueryBatchInventoryList, params)
 }
 
 // TransferStorageLocationParams holds params for transferring goods between locations.
@@ -224,7 +224,7 @@ type TransferStorageLocationParams struct {
 
 // TransferStorageLocation transfers goods between storage locations.
 func (s *InventoryService) TransferStorageLocation(ctx context.Context, params *TransferStorageLocationParams) error {
-	return doAction(ctx, s.client, "TRANSFER_STORAGE_LOCATION", params)
+	return doAction(ctx, s.client, ServiceTypeTransferStorageLocation, params)
 }
 
 // SBSInventory represents Shopee SBS inventory.
@@ -240,7 +240,7 @@ type SBSInventory struct {
 // QuerySBSInventoryList queries Shopee SBS inventory.
 func (s *InventoryService) QuerySBSInventoryList(ctx context.Context, warehouseID int64, page, pageSize int) ([]SBSInventory, int, error) {
 	params := map[string]any{"warehouseId": warehouseID, "page": page, "pageSize": pageSize}
-	return doList[SBSInventory](ctx, s.client, "QUERY_SBS_INVENTORY_LIST", params)
+	return doList[SBSInventory](ctx, s.client, ServiceTypeQuerySbsInventoryList, params)
 }
 
 // SBSWarehouse represents a Shopee SBS warehouse.
@@ -252,5 +252,5 @@ type SBSWarehouse struct {
 
 // QuerySBSWarehouseList queries Shopee SBS warehouse list.
 func (s *InventoryService) QuerySBSWarehouseList(ctx context.Context) ([]SBSWarehouse, error) {
-	return doListNoTotal[SBSWarehouse](ctx, s.client, "QUERY_SBS_WAREHOUSE_LIST", map[string]any{})
+	return doListNoTotal[SBSWarehouse](ctx, s.client, ServiceTypeQuerySbsWarehouseList, map[string]any{})
 }

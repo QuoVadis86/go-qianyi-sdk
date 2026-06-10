@@ -30,5 +30,5 @@ func (s *ShopService) QueryList(ctx context.Context, page, pageSize int, platfor
 	if name != "" {
 		params["name"] = name
 	}
-	return doList[Shop](ctx, s.client, "QUERY_SHOP_LIST", params)
+	return doList[Shop](ctx, s.client, ServiceTypeQueryShopList, params)
 }

@@ -77,7 +77,7 @@ type FirstLegQueryParams struct {
 
 // QueryFirstLegList retrieves first-leg logistics orders.
 func (s *LogisticsService) QueryFirstLegList(ctx context.Context, params *FirstLegQueryParams) ([]FirstLegOrder, int, error) {
-	return doList[FirstLegOrder](ctx, s.client, "QUERY_FIRST_LEG_ORDER_LIST", params)
+	return doList[FirstLegOrder](ctx, s.client, ServiceTypeQueryFirstLegOrderList, params)
 }
 
 // FirstLegSkuDetail represents a SKU detail within a first-leg order creation.
@@ -116,7 +116,7 @@ type CreateFirstLegParams struct {
 
 // CreateFirstLeg creates a first-leg logistics order.
 func (s *LogisticsService) CreateFirstLeg(ctx context.Context, params *CreateFirstLegParams) error {
-	return doAction(ctx, s.client, "CREATE_FIRST_LEG_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypeCreateFirstLegOrder, params)
 }
 
 // FirstLegLogisticsInfo represents a logistics option for first-leg.
@@ -128,7 +128,7 @@ type FirstLegLogisticsInfo struct {
 // QueryFirstLegLogistics queries available first-leg logistics for a warehouse.
 func (s *LogisticsService) QueryFirstLegLogistics(ctx context.Context, warehouseName string) ([]FirstLegLogisticsInfo, error) {
 	params := map[string]any{"warehouseName": warehouseName}
-	return doListNoTotal[FirstLegLogisticsInfo](ctx, s.client, "QUERY_FIRST_LRG_LOGISTICS", params)
+	return doListNoTotal[FirstLegLogisticsInfo](ctx, s.client, ServiceTypeQueryFirstLrgLogistics, params)
 }
 
 // TrackingPackage represents a logistics tracking package.
@@ -162,7 +162,7 @@ type TrackingQueryParams struct {
 
 // QueryFirstLegTracking queries first-leg tracking packages.
 func (s *LogisticsService) QueryFirstLegTracking(ctx context.Context, params *TrackingQueryParams) ([]TrackingPackage, int, error) {
-	return doList[TrackingPackage](ctx, s.client, "QUERY_FIRST_LRG_TRACKING_PACKAGE", params)
+	return doList[TrackingPackage](ctx, s.client, ServiceTypeQueryFirstLrgTrackingPackage, params)
 }
 
 // WithdrawFirstLegParams holds parameters for withdrawing a first-leg order.
@@ -174,7 +174,7 @@ type WithdrawFirstLegParams struct {
 
 // WithdrawFirstLeg withdraws or deletes a first-leg logistics order.
 func (s *LogisticsService) WithdrawFirstLeg(ctx context.Context, params *WithdrawFirstLegParams) error {
-	return doAction(ctx, s.client, "WITHDRAW_AND_DEL_FIRST_LEG", params)
+	return doAction(ctx, s.client, ServiceTypeWithdrawAndDelFirstLeg, params)
 }
 
 // PushTrackingParams holds parameters for pushing tracking status.
@@ -188,5 +188,5 @@ type PushTrackingParams struct {
 
 // PushTrackingPackage pushes logistics tracking status notification.
 func (s *LogisticsService) PushTrackingPackage(ctx context.Context, params *PushTrackingParams) error {
-	return doAction(ctx, s.client, "PUSH_TRACKING_PACKAGE", params)
+	return doAction(ctx, s.client, ServiceTypePushTrackingPackage, params)
 }

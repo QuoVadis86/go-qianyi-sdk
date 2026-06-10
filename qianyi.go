@@ -16,6 +16,7 @@ type SDK struct {
 	Logistics     *LogisticsService
 	Report        *ReportService
 	CustomerField *CustomerFieldService
+	Supplier      *SupplierService
 }
 
 // NewSDK creates a new QERP SDK with the given appId and appSecret.
@@ -36,6 +37,7 @@ func NewSDK(appID, appSecret string, opts ...ClientOption) *SDK {
 		Logistics:     NewLogisticsService(c),
 		Report:        NewReportService(c),
 		CustomerField: NewCustomerFieldService(c),
+		Supplier:      NewSupplierService(c),
 	}
 }
 

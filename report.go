@@ -80,7 +80,7 @@ type ShopeeReportDTO struct {
 
 // QueryShopeeTransaction queries Shopee transaction details.
 func (s *ReportService) QueryShopeeTransaction(ctx context.Context, params *ShopeeReportQuery) ([]ShopeeReportDTO, int, error) {
-	return doList[ShopeeReportDTO](ctx, s.client, "QUERY_SHOPEE_TRANSACTION_DETAIL_LIST", params)
+	return doList[ShopeeReportDTO](ctx, s.client, ServiceTypeQueryShopeeTransactionDetailList, params)
 }
 
 // LazadaReportDTO represents Lazada transaction details.
@@ -151,7 +151,7 @@ type LazadaReportQuery struct {
 
 // QueryLazadaTransaction queries Lazada transaction details.
 func (s *ReportService) QueryLazadaTransaction(ctx context.Context, params *LazadaReportQuery) ([]LazadaReportDTO, int, error) {
-	return doList[LazadaReportDTO](ctx, s.client, "QUERY_LAZADA_TRANSACTION_DETAIL_LIST", params)
+	return doList[LazadaReportDTO](ctx, s.client, ServiceTypeQueryLazadaTransactionDetailList, params)
 }
 
 // TiktokReportQuery holds params for TikTok transaction details.
@@ -168,7 +168,7 @@ type TiktokReportQuery struct {
 
 // QueryTiktokTransaction queries TikTok transaction details.
 func (s *ReportService) QueryTiktokTransaction(ctx context.Context, params *TiktokReportQuery) ([]TiktokReportDTO, int, error) {
-	return doList[TiktokReportDTO](ctx, s.client, "QUERY_TIKTOK_TRANSACTION_DETAIL_LIST", params)
+	return doList[TiktokReportDTO](ctx, s.client, ServiceTypeQueryTiktokTransactionDetailList, params)
 }
 
 // ShopeePayoutQuery holds params for Shopee payout records.
@@ -225,7 +225,7 @@ type ShopeePayoutDTO struct {
 
 // QueryShopeePayout queries Shopee payout records.
 func (s *ReportService) QueryShopeePayout(ctx context.Context, params *ShopeePayoutQuery) ([]ShopeePayoutDTO, int, error) {
-	return doList[ShopeePayoutDTO](ctx, s.client, "QUERY_SHOPEE_PAYOUT_DETAIL_LIST", params)
+	return doList[ShopeePayoutDTO](ctx, s.client, ServiceTypeQueryShopeePayoutDetailList, params)
 }
 
 // LazadaAccountQuery holds params for Lazada account transaction list.
@@ -264,7 +264,7 @@ type LazadaAccountTransactionDTO struct {
 
 // QueryLazadaAccountTransaction queries Lazada account transaction list.
 func (s *ReportService) QueryLazadaAccountTransaction(ctx context.Context, params *LazadaAccountQuery) ([]LazadaAccountTransactionDTO, int, error) {
-	return doList[LazadaAccountTransactionDTO](ctx, s.client, "QUERY_LAZADA_ACCOUNT_TRANSACTION_LIST", params)
+	return doList[LazadaAccountTransactionDTO](ctx, s.client, ServiceTypeQueryLazadaAccountTransactionList, params)
 }
 
 // TiktokV2ReportQuery holds params for TikTok V2 transaction details.
@@ -303,7 +303,7 @@ type TiktokV2ReportDTO struct {
 
 // QueryTiktokV2Transaction queries TikTok V2 transaction details.
 func (s *ReportService) QueryTiktokV2Transaction(ctx context.Context, params *TiktokV2ReportQuery) ([]TiktokV2ReportDTO, int, error) {
-	return doList[TiktokV2ReportDTO](ctx, s.client, "QUERY_TIKTOK_V2_TRANSACTION_DETAIL_LIST", params)
+	return doList[TiktokV2ReportDTO](ctx, s.client, ServiceTypeQueryTiktokV2TransactionDetailList, params)
 }
 
 // TiktokPayoutQuery holds params for TikTok payout records.
@@ -338,7 +338,7 @@ type TiktokPayoutDTO struct {
 
 // QueryTiktokPayout queries TikTok payout records.
 func (s *ReportService) QueryTiktokPayout(ctx context.Context, params *TiktokPayoutQuery) ([]TiktokPayoutDTO, int, error) {
-	return doList[TiktokPayoutDTO](ctx, s.client, "QUERY_TIKTOK_PAYOUT_RECORD", params)
+	return doList[TiktokPayoutDTO](ctx, s.client, ServiceTypeQueryTiktokPayoutRecord, params)
 }
 
 // InventoryDailyReportQuery holds params for inventory daily statement.
@@ -366,5 +366,5 @@ type InventoryDailyReportDTO struct {
 
 // QueryInventoryDailyReport queries inventory daily statement.
 func (s *ReportService) QueryInventoryDailyReport(ctx context.Context, params *InventoryDailyReportQuery) ([]InventoryDailyReportDTO, int, error) {
-	return doList[InventoryDailyReportDTO](ctx, s.client, "QUERY_INVENTORY_DAILY_REPORT", params)
+	return doList[InventoryDailyReportDTO](ctx, s.client, ServiceTypeQueryInventoryDailyReport, params)
 }

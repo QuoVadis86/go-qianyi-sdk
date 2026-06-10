@@ -24,5 +24,5 @@ type CustomerFieldQueryParams struct {
 
 // Query retrieves custom field definitions for a given table.
 func (s *CustomerFieldService) Query(ctx context.Context, params *CustomerFieldQueryParams) ([]CustomField, error) {
-	return doListNoTotal[CustomField](ctx, s.client, "CUSTOMER_FIELD_QUERY", params)
+	return doListNoTotal[CustomField](ctx, s.client, ServiceTypeCustomerFieldQuery, params)
 }

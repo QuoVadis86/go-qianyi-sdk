@@ -29,12 +29,12 @@ type CreateRefundParams struct {
 
 // Create creates a new refund/return order in QERP.
 func (s *RefundService) Create(ctx context.Context, params *CreateRefundParams) (*ReturnOrder, error) {
-	return doSingle[ReturnOrder](ctx, s.client, "CREATE_RETURN_ORDER", params)
+	return doSingle[ReturnOrder](ctx, s.client, ServiceTypeCreateReturnOrder, params)
 }
 
 // Cancel cancels a refund/return order by return number.
 func (s *RefundService) Cancel(ctx context.Context, returnNumber string) error {
-	return doAction(ctx, s.client, "CLOSE_RETURN_ORDER", map[string]any{"returnNumber": returnNumber})
+	return doAction(ctx, s.client, ServiceTypeCloseReturnOrder, map[string]any{"returnNumber": returnNumber})
 }
 
 // RefundQueryParams holds parameters for querying refund orders.
@@ -61,7 +61,7 @@ type RefundQueryParams struct {
 
 // QueryList retrieves a paginated list of refund orders with optional filters.
 func (s *RefundService) QueryList(ctx context.Context, params *RefundQueryParams) ([]ReturnOrder, int, error) {
-	return doList[ReturnOrder](ctx, s.client, "QUERY_RETURN_ORDER_LIST", params)
+	return doList[ReturnOrder](ctx, s.client, ServiceTypeQueryReturnOrderList, params)
 }
 
 // PushReturnOrderInfoParams holds parameters for pushing refund return info.
@@ -75,5 +75,5 @@ type PushReturnOrderInfoParams struct {
 
 // PushReturnInfo pushes refund/return order process information.
 func (s *RefundService) PushReturnInfo(ctx context.Context, params *PushReturnOrderInfoParams) error {
-	return doAction(ctx, s.client, "PUSH_RETURN_ORDER_INFO", params)
+	return doAction(ctx, s.client, ServiceTypePushReturnOrderInfo, params)
 }

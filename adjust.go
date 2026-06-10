@@ -29,7 +29,7 @@ type AdjustQueryParams struct {
 
 // QueryList retrieves adjustment orders with optional filters.
 func (s *AdjustService) QueryList(ctx context.Context, params *AdjustQueryParams) ([]AdjustmentOrder, int, error) {
-	return doList[AdjustmentOrder](ctx, s.client, "QUERY_ADJUSTMENT_LIST", params)
+	return doList[AdjustmentOrder](ctx, s.client, ServiceTypeQueryAdjustmentList, params)
 }
 
 // CreateAdjustParams holds parameters for creating an adjustment order.
@@ -51,5 +51,5 @@ type AdjustSkuInput struct {
 
 // Create creates a new inventory adjustment order.
 func (s *AdjustService) Create(ctx context.Context, params *CreateAdjustParams) error {
-	return doAction(ctx, s.client, "CREATE_ADJUSTMENT_ORDER", params)
+	return doAction(ctx, s.client, ServiceTypeCreateAdjustmentOrder, params)
 }

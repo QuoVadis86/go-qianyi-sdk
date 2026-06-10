@@ -24,7 +24,7 @@ func (m *mockHTTPClient) Do(req *http.Request) (*http.Response, error) {
 
 func TestGenerateSign(t *testing.T) {
 	c := NewClient("test-app-id", "test-app-secret")
-	sign := c.GenerateSign("QUERY_SHOP_LIST", `{"page":1,"pageSize":10}`, 1234567890)
+	sign := c.GenerateSign(ServiceTypeQueryShopList, `{"page":1,"pageSize":10}`, 1234567890)
 	if sign == "" {
 		t.Fatal("expected non-empty sign")
 	}
@@ -142,7 +142,7 @@ func TestClient_WithContextCancel(t *testing.T) {
 	cancel()
 
 	var base BaseResponse
-	err := c.Do(ctx, "QUERY_SHOP_LIST", "{}", &base)
+	err := c.Do(ctx, ServiceTypeQueryShopList, "{}", &base)
 	if err == nil {
 		t.Fatal("expected error for cancelled context")
 	}
@@ -213,16 +213,16 @@ func TestEndpointForService(t *testing.T) {
 		serviceType string
 		expected    string
 	}{
-		{"QUERY_SHOP_LIST", "shop"},
-		{"QUERY_WAREHOUSE_LIST", "warehouse"},
-		{"QUERY_SIMPLE_LIST_SKU", "sku"},
-		{"INSERT_SKU_INFO", "sku"},
-		{"CREATE_SALES_ORDER", "salesOrder"},
-		{"QUERY_RETURN_ORDER_LIST", "returnOrder"},
-		{"CREATE_ASN_ORDER", "asn"},
-		{"QUERY_INVENTORY_LOG_LIST", "inventory"},
-		{"QUERY_FIRST_LEG_ORDER_LIST", "firstLeg"},
-		{"CUSTOMER_FIELD_QUERY", "property"},
+		{ServiceTypeQueryShopList, "shop"},
+		{ServiceTypeQueryWarehouseList, "warehouse"},
+		{ServiceTypeQuerySimpleListSku, "sku"},
+		{ServiceTypeInsertSkuInfo, "sku"},
+		{ServiceTypeCreateSalesOrder, "salesOrder"},
+		{ServiceTypeQueryReturnOrderList, "returnOrder"},
+		{ServiceTypeCreateAsnOrder, "asn"},
+		{ServiceTypeQueryInventoryLogList, "inventory"},
+		{ServiceTypeQueryFirstLegOrderList, "firstLeg"},
+		{ServiceTypeCustomerFieldQuery, "property"},
 		{"UNKNOWN_TYPE", ""},
 	}
 	for _, tt := range tests {
@@ -245,7 +245,7 @@ func TestClient_Do_HTTPError(t *testing.T) {
 	})
 
 	var base BaseResponse
-	err := c.Do(context.Background(), "QUERY_SHOP_LIST", "{}", &base)
+	err := c.Do(context.Background(), ServiceTypeQueryShopList, "{}", &base)
 	if err == nil {
 		t.Fatal("expected error for 500 response")
 	}
@@ -259,7 +259,7 @@ func TestDoList(t *testing.T) {
 	c := NewClient("app", "secret", WithHTTPClient(mock))
 
 	params := map[string]any{"page": 1, "pageSize": 10}
-	result, total, err := doList[Shop](context.Background(), c, "QUERY_SHOP_LIST", params)
+	result, total, err := doList[Shop](context.Background(), c, ServiceTypeQueryShopList, params)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -278,7 +278,7 @@ func TestDoAction(t *testing.T) {
 	}
 	c := NewClient("app", "secret", WithHTTPClient(mock))
 
-	err := doAction(context.Background(), c, "CLOSE_SALES_ORDER", map[string]any{"orderNumber": "ORD-001"})
+	err := doAction(context.Background(), c, ServiceTypeCloseSalesOrder, map[string]any{"orderNumber": "ORD-001"})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

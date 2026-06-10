@@ -89,8 +89,51 @@ qianyi.WithBaseURL("https://asia.qianyierp.com") // 海外生产
 | `sdk.Purchase` 采购 | 3 | 查询、创建、更新(含1688) |
 | `sdk.Logistics` 头程物流 | 6 | 查询、创建、查物流商、追踪、撤单、推送追踪 |
 | `sdk.Report` 报表 | 8 | Shopee/Lazada/TikTok交易、Shopee提现、Lazada账户、库存日报 |
+| `sdk.Supplier` 供应商 | 4 | 查询、创建、查询供应商商品、创建供应商商品 |
 | `sdk.CustomerField` 自定义字段 | 1 | 查自定义字段定义 |
-| **合计** | **66** | 全部返回完整结构体，零 `any` |
+| **回调 (Webhook)** | **3** | 分散在各模块: `Asn.Push`、`Refund.PushStatus`、`Logistics.PushTracking` |
+| **合计** | **73** | 全部返回完整结构体，零 `any` |
+
+---
+
+## 官方文档 / Official Docs
+
+| 模块 | SDK Service | 文档地址 |
+|------|-------------|----------|
+| 店铺 / Shop | `sdk.Shop` | https://open.qianyierp.com/en-US/erp/shop.html |
+| 商品 / SKU | `sdk.Sku` | https://open.qianyierp.com/en-US/erp/sku.html |
+| 订单 / Order | `sdk.Order` | https://open.qianyierp.com/en-US/erp/order.html |
+| 退款 / Refund | `sdk.Refund` | https://open.qianyierp.com/en-US/erp/refund.html |
+| 仓库 / Warehouse | `sdk.Warehouse` | https://open.qianyierp.com/en-US/erp/warehouse.html |
+| 库存 / Inventory | `sdk.Inventory` | https://open.qianyierp.com/en-US/erp/inventory.html |
+| 入库单 / ASN | `sdk.Asn` | https://open.qianyierp.com/en-US/erp/asn.html |
+| 出库单 / ODO | `sdk.Odo` | https://open.qianyierp.com/en-US/erp/odo.html |
+| 调整单 / Adjustment | `sdk.Adjust` | https://open.qianyierp.com/en-US/erp/adjust.html |
+| 采购 / Purchase | `sdk.Purchase` | https://open.qianyierp.com/en-US/erp/purchase.html |
+| 头程物流 / Logistics | `sdk.Logistics` | https://open.qianyierp.com/en-US/erp/logistics.html |
+| 报表 / Report | `sdk.Report` | https://open.qianyierp.com/en-US/erp/report.html |
+| 回调 / Webhook | `Asn.Push` / `Refund.PushStatus` / `Logistics.PushTracking` | https://open.qianyierp.com/en-US/erp/webhook.html |
+| 供应商 / Supplier | `sdk.Supplier` | https://open.qianyierp.com/en-US/erp/supplier.html |
+| 自定义字段 / CustomerField | `sdk.CustomerField` | https://open.qianyierp.com/en-US/erp/customer_field.html |
+
+### 公共约定 / Commons
+
+| 文档 | 地址 |
+|------|------|
+| API 接入指南 | https://open.qianyierp.com/zh-CN/commons/authorization.html |
+| 异常码 | https://open.qianyierp.com/zh-CN/commons/errors.html |
+| 枚举 | https://open.qianyierp.com/zh-CN/commons/enums.html |
+| 限流规则 | https://open.qianyierp.com/zh-CN/commons/limit.html |
+
+### 限流规则 (Rate Limits)
+
+| 接口 | serviceType | 频率 |
+|------|-------------|------|
+| 创建订单 | `CREATE_SALES_ORDER` | 100次/10秒 |
+| 退货单创建 | `CREATE_RETURN_ORDER` | 100次/10秒 |
+| 查询订单 | `QUERY_SALES_ORDER_LIST` | 100次/60秒 |
+| 查询退货单 | `QUERY_RETURN_ORDER_LIST` | 100次/60秒 |
+| 其余接口 | 其他 | 200次/10秒 |
 
 ---
 
@@ -188,6 +231,8 @@ Get credentials from Qianyi ERP: **Settings → Three-party Application Integrat
 | Logistics | `/api/v1/logistics` | Query channels, tracking |
 | Report | `/api/v1/report` | Query list, sales report |
 | CustomerField | `/api/v1/customerField` | Query custom fields |
+| Supplier | `/api/v1/supplier` | Query list, create, query SKU list, create SKU |
+| Webhook (callbacks) | embedded in ASN/Refund/Logistics | Push ASN, return order, tracking |
 
 ---
 

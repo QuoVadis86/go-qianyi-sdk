@@ -24,7 +24,7 @@ func (s *SkuService) QueryList(ctx context.Context, page, pageSize int, opts ...
 	for _, opt := range opts {
 		opt(params)
 	}
-	return doList[Sku](ctx, s.client, "QUERY_SIMPLE_LIST_SKU", params)
+	return doList[Sku](ctx, s.client, ServiceTypeQuerySimpleListSku, params)
 }
 
 // SkuQueryOption is a functional option for filtering SKU list queries.
@@ -74,7 +74,7 @@ func (s *SkuService) Create(ctx context.Context, sku *Sku) error {
 		return err
 	}
 	w := &ResponseWrapper{}
-	return s.client.Do(ctx, "INSERT_SKU_INFO", string(biz), w)
+	return s.client.Do(ctx, ServiceTypeInsertSkuInfo, string(biz), w)
 }
 
 // Update updates an existing SKU in QERP.
@@ -84,12 +84,12 @@ func (s *SkuService) Update(ctx context.Context, sku *Sku) error {
 		return err
 	}
 	w := &ResponseWrapper{}
-	return s.client.Do(ctx, "UPDATE_SKU_INFO", string(biz), w)
+	return s.client.Do(ctx, ServiceTypeUpdateSkuInfo, string(biz), w)
 }
 
 // Enable enables or disables a SKU. Set enable to 1 for active, 0 for inactive.
 func (s *SkuService) Enable(ctx context.Context, sku string, enable int) error {
-	return doAction(ctx, s.client, "ENABLE_SKU", map[string]any{"sku": sku, "enable": enable})
+	return doAction(ctx, s.client, ServiceTypeEnableSku, map[string]any{"sku": sku, "enable": enable})
 }
 
 // QuerySysSKU queries system SKUs with optional SKU code filter.
@@ -98,5 +98,5 @@ func (s *SkuService) QuerySysSKU(ctx context.Context, page, pageSize int, skus [
 	if len(skus) > 0 {
 		params["skus"] = skus
 	}
-	return doList[Sku](ctx, s.client, "QUERY_SYS_SKU", params)
+	return doList[Sku](ctx, s.client, ServiceTypeQuerySysSku, params)
 }
