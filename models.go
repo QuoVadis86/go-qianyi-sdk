@@ -276,20 +276,33 @@ type ReturnOrder struct {
 	BuyerID        string      `json:"buyerId,omitempty"`
 	Currency       string      `json:"currency,omitempty"`
 	OrderRefundAmount float64  `json:"orderRefundAmount,omitempty"`
+	TotalAmount    float64     `json:"totalAmount,omitempty"`
 	AsnNumber      string      `json:"asnNumber,omitempty"`
+	AsnID          string      `json:"asnId,omitempty"`
+	OrderStatus    string      `json:"orderStatus,omitempty"`
 	ReturnSkuList  []ReturnSku `json:"returnSkuList,omitempty"`
+	RefundCustomFieldValueList []CustomField `json:"refundCustomFieldValueVOList,omitempty"`
 }
 
 // ReturnSku represents a product line item within a return order.
 type ReturnSku struct {
-	Sku              string `json:"sku"`
-	OrderSkuID       int64  `json:"orderSkuId,omitempty"`
-	Quantity         int    `json:"quantity"`
-	Remark           string `json:"remark,omitempty"`
-	Selected         int    `json:"selected,omitempty"`
-	StorageLocationCode string `json:"storageLocationCode,omitempty"`
-	GoodQuantity     int    `json:"goodQuantity,omitempty"`
-	BadQuantity      int    `json:"badQuantity,omitempty"`
+	Sku              string           `json:"sku"`
+	OrderSkuID       int64            `json:"orderSkuId,omitempty"`
+	Quantity         int              `json:"quantity"`
+	Remark           string           `json:"remark,omitempty"`
+	Selected         int              `json:"selected,omitempty"`
+	StorageLocationCode string        `json:"storageLocationCode,omitempty"`
+	GoodQuantity     int              `json:"goodQuantity,omitempty"`
+	BadQuantity      int              `json:"badQuantity,omitempty"`
+	ItemRefundAmount float64          `json:"itemRefundAmount,omitempty"`
+	RefundAmount     float64          `json:"refundAmount,omitempty"`
+	LocAndQuantityList []LocAndQuantity `json:"locAndQuantityList,omitempty"`
+}
+
+// LocAndQuantity represents storage location code and receive quantity.
+type LocAndQuantity struct {
+	StorageLocationCode string `json:"storageLocationCode"`
+	ReceiveQuantity     int    `json:"receiveQuantity"`
 }
 
 // SkuInventory represents the current inventory state for a SKU in a warehouse.
