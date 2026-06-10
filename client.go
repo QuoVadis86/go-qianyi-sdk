@@ -204,6 +204,8 @@ func endpointForService(serviceType string) string {
 		"QUERY_TIKTOK_V2_TRANSACTION_DETAIL_LIST": "report",
 		"QUERY_TIKTOK_PAYOUT_RECORD":           "report",
 		"QUERY_INVENTORY_DAILY_REPORT":         "report",
+		// Webhook / Subscribe
+		"SUBSCRIBE_ORDER":               "salesOrder",
 		// Customer Field
 		"CUSTOMER_FIELD_QUERY": "property",
 	}

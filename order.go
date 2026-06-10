@@ -206,3 +206,36 @@ func (s *OrderService) QueryOrderDocument(orderNumber string) error {
 	w := &ResponseWrapper{}
 	return s.client.Do("QUERY_SALES_ORDER_DOCUMENT", string(biz), w)
 }
+
+// SubscribeOrderItem represents an order to subscribe to.
+type SubscribeOrderItem struct {
+	OrderNumber string `json:"orderNumber"`
+}
+
+// SubscribeOrderParams holds parameters for subscribing to order status.
+type SubscribeOrderParams struct {
+	OrderType string              `json:"orderType"`
+	OrderList []SubscribeOrderItem `json:"orderList"`
+}
+
+// SubscribeOrder subscribes to order status push notifications.
+func (s *OrderService) SubscribeOrder(orderType string, orderNumbers []string) ([]any, error) {
+	list := make([]SubscribeOrderItem, len(orderNumbers))
+	for i, n := range orderNumbers {
+		list[i] = SubscribeOrderItem{OrderNumber: n}
+	}
+	params := SubscribeOrderParams{
+		OrderType: orderType,
+		OrderList: list,
+	}
+	biz, _ := json.Marshal(params)
+	var result []any
+	w := &ResponseWrapper{Result: &result}
+	if err := s.client.Do("SUBSCRIBE_ORDER", string(biz), w); err != nil {
+		return nil, err
+	}
+	if w.HasError() {
+		return nil, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
+	}
+	return result, nil
+}
