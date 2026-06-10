@@ -428,6 +428,9 @@ type AdjustmentSku struct {
 	Sku               string `json:"sku"`
 	Title             string `json:"title,omitempty"`
 	StorageLocationCode string `json:"storageLocationCode,omitempty"`
+	Color             string `json:"color,omitempty"`
+	ItemPackage       string `json:"itemPackage,omitempty"`
+	Size              string `json:"size,omitempty"`
 	AvailableQuantity int64  `json:"availableQuantity"`
 	AllocatedQuantity int64  `json:"allocatedQuantity"`
 	TotalQuantity     int64  `json:"totalQuantity"`
