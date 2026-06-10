@@ -21,6 +21,8 @@ type CreateRefundParams struct {
 	Remark        string      `json:"remark,omitempty"`
 	Carrier       string      `json:"carrier,omitempty"`
 	CustomNumber  string      `json:"customNumber,omitempty"`
+	AutoCommit    *bool       `json:"autoCommit,omitempty"`
+	ExpectArriveTime string   `json:"expectArriveTime,omitempty"`
 	ReturnSkuList []ReturnSku `json:"returnSkuList"`
 }
 
@@ -57,6 +59,9 @@ type RefundQueryParams struct {
 	ToCreateTime   string `json:"toCreateTime,omitempty"`
 	UpdateTimeFrom string `json:"updateTimeFrom,omitempty"`
 	UpdateTimeTo   string `json:"updateTimeTo,omitempty"`
+	ShopIDList     []int64 `json:"shopIdList,omitempty"`
+	OrderStatus    string `json:"orderStatus,omitempty"`
+	WithoutType    *bool   `json:"withoutType,omitempty"`
 }
 
 // QueryList retrieves a paginated list of refund orders with optional filters.
@@ -71,4 +76,20 @@ func (s *RefundService) QueryList(params *RefundQueryParams) ([]ReturnOrder, int
 		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
 	}
 	return list, w.BizContent.Total, nil
+}
+
+// PushReturnOrderInfoParams holds parameters for pushing refund return info.
+type PushReturnOrderInfoParams struct {
+	ReturnNumber      string      `json:"returnNumber"`
+	OrderNumber       string      `json:"orderNumber"`
+	OnlineOrderNumber string      `json:"onlineOrderNumber"`
+	Status            string      `json:"status"`
+	ReturnSkuList     []ReturnSku `json:"returnSkuList"`
+}
+
+// PushReturnInfo pushes refund/return order process information.
+func (s *RefundService) PushReturnInfo(params *PushReturnOrderInfoParams) error {
+	biz, _ := json.Marshal(params)
+	w := &ResponseWrapper{}
+	return s.client.Do("PUSH_RETURN_ORDER_INFO", string(biz), w)
 }

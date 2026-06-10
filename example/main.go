@@ -38,7 +38,7 @@ func main() {
 		fmt.Printf("  Warehouse: %s (type: %s, country: %s)\n", w.Name, w.Kind, w.Country)
 	}
 
-	inventory, total, err := sdk.Inventory.QueryListV2(&qianyi.InventoryQueryParams{
+	inventory, total, err := sdk.Inventory.QueryListV2(&qianyi.InventoryQueryV2Params{
 		Page:      1,
 		PageSize:  10,
 		Warehouse: "your-warehouse-name",
