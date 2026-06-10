@@ -12,7 +12,7 @@ func NewReportService(client *Client) *ReportService {
 	return &ReportService{client: client}
 }
 
-// ReportPageParams holds common pagination + shop filter params.
+// ReportPageParams holds common pagination and shop filter params.
 type ReportPageParams struct {
 	Page         int      `json:"page"`
 	PageSize     int      `json:"pageSize"`
@@ -38,44 +38,44 @@ type ShopeeReportQuery struct {
 
 // ShopeeReportDTO represents Shopee transaction details.
 type ShopeeReportDTO struct {
-	ShopID            int64   `json:"shopId"`
-	OnlineShopID      string  `json:"onlineShopId"`
-	ShopName          string  `json:"shopName"`
-	OrderSN            string  `json:"ordersn"`
-	PayoutTime        int64   `json:"payoutTime"`
-	PayoutTimeFormatted string `json:"payoutTimeFormatted"`
-	Currency          string  `json:"currency"`
-	AdjustmentLevel   string  `json:"adjustmentLevel,omitempty"`
-	OrderStatus       string  `json:"orderStatus,omitempty"`
-	ReturnSN          string  `json:"returnsn,omitempty"`
-	RefundSN          string  `json:"refundsn,omitempty"`
-	EscrowAmount      float64 `json:"escrowAmount,omitempty"`
-	OriginalPrice     float64 `json:"originalPrice,omitempty"`
-	OrderSellingPrice float64 `json:"orderSellingPrice,omitempty"`
-	SellerDiscount    float64 `json:"sellerDiscount,omitempty"`
-	ProductSaleAmount float64 `json:"productSaleAmount,omitempty"`
-	OriginalPriceBeforeRefund float64 `json:"originalPriceBeforeRefund,omitempty"`
-	SellingPriceBeforeRefund  float64 `json:"sellingPriceBeforeRefund,omitempty"`
+	ShopID                     int64   `json:"shopId"`
+	OnlineShopID               string  `json:"onlineShopId"`
+	ShopName                   string  `json:"shopName"`
+	OrderSN                    string  `json:"ordersn"`
+	PayoutTime                 int64   `json:"payoutTime"`
+	PayoutTimeFormatted        string  `json:"payoutTimeFormatted"`
+	Currency                   string  `json:"currency"`
+	AdjustmentLevel            string  `json:"adjustmentLevel,omitempty"`
+	OrderStatus                string  `json:"orderStatus,omitempty"`
+	ReturnSN                   string  `json:"returnsn,omitempty"`
+	RefundSN                   string  `json:"refundsn,omitempty"`
+	EscrowAmount               float64 `json:"escrowAmount,omitempty"`
+	OriginalPrice              float64 `json:"originalPrice,omitempty"`
+	OrderSellingPrice          float64 `json:"orderSellingPrice,omitempty"`
+	SellerDiscount             float64 `json:"sellerDiscount,omitempty"`
+	ProductSaleAmount          float64 `json:"productSaleAmount,omitempty"`
+	OriginalPriceBeforeRefund  float64 `json:"originalPriceBeforeRefund,omitempty"`
+	SellingPriceBeforeRefund   float64 `json:"sellingPriceBeforeRefund,omitempty"`
 	SellerDiscountBeforeRefund float64 `json:"sellerDiscountBeforeRefund,omitempty"`
-	RefundAmount      float64 `json:"refundAmount,omitempty"`
-	ShopeeDiscount    float64 `json:"shopeeDiscount,omitempty"`
-	VoucherFromSeller float64 `json:"voucherFromSeller,omitempty"`
-	SellerCoinCashBack float64 `json:"sellerCoinCashBack,omitempty"`
-	BuyerPaidShippingFee float64 `json:"buyerPaidShippingFee,omitempty"`
-	ShopeeShippingRebate float64 `json:"shopeeShippingRebate,omitempty"`
-	ActualShippingFee float64 `json:"actualShippingFee,omitempty"`
-	ReverseShippingFee float64 `json:"reverseShippingFee,omitempty"`
-	CommissionFee     float64 `json:"commissionFee,omitempty"`
-	ServiceFee        float64 `json:"serviceFee,omitempty"`
-	SellerTransactionFee float64 `json:"sellerTransactionFee,omitempty"`
-	EscrowTax         float64 `json:"escrowTax,omitempty"`
-	SellerLostCompensation float64 `json:"sellerLostCompensation,omitempty"`
-	BuyerTotalAmount  float64 `json:"buyerTotalAmount,omitempty"`
-	Coins             float64 `json:"coins,omitempty"`
-	VoucherFromShopee float64 `json:"voucherFromShopee,omitempty"`
-	UpdateTime        int64   `json:"updateTime,omitempty"`
-	ShopTimeZone      string  `json:"shopTimeZone,omitempty"`
-	PublicID          string  `json:"publicId,omitempty"`
+	RefundAmount               float64 `json:"refundAmount,omitempty"`
+	ShopeeDiscount             float64 `json:"shopeeDiscount,omitempty"`
+	VoucherFromSeller          float64 `json:"voucherFromSeller,omitempty"`
+	SellerCoinCashBack         float64 `json:"sellerCoinCashBack,omitempty"`
+	BuyerPaidShippingFee       float64 `json:"buyerPaidShippingFee,omitempty"`
+	ShopeeShippingRebate       float64 `json:"shopeeShippingRebate,omitempty"`
+	ActualShippingFee          float64 `json:"actualShippingFee,omitempty"`
+	ReverseShippingFee         float64 `json:"reverseShippingFee,omitempty"`
+	CommissionFee              float64 `json:"commissionFee,omitempty"`
+	ServiceFee                 float64 `json:"serviceFee,omitempty"`
+	SellerTransactionFee       float64 `json:"sellerTransactionFee,omitempty"`
+	EscrowTax                  float64 `json:"escrowTax,omitempty"`
+	SellerLostCompensation     float64 `json:"sellerLostCompensation,omitempty"`
+	BuyerTotalAmount           float64 `json:"buyerTotalAmount,omitempty"`
+	Coins                      float64 `json:"coins,omitempty"`
+	VoucherFromShopee          float64 `json:"voucherFromShopee,omitempty"`
+	UpdateTime                 int64   `json:"updateTime,omitempty"`
+	ShopTimeZone               string  `json:"shopTimeZone,omitempty"`
+	PublicID                   string  `json:"publicId,omitempty"`
 }
 
 // QueryShopeeTransaction queries Shopee transaction details.
@@ -90,21 +90,6 @@ func (s *ReportService) QueryShopeeTransaction(params *ShopeeReportQuery) ([]Sho
 		return nil, 0, &APIError{ErrorCode: w.ErrorCode, Message: w.ErrorMsg, RequestID: w.RequestID}
 	}
 	return list, w.BizContent.Total, nil
-}
-
-// LazadaReportQuery extends ReportPageParams with Lazada-specific filters.
-type LazadaReportQuery struct {
-	Page             int      `json:"page"`
-	PageSize         int      `json:"pageSize"`
-	ShopIDList       []int64  `json:"shopIdList,omitempty"`
-	ShopNameList     []string `json:"shopNameList,omitempty"`
-	PayoutTimeFrom   string   `json:"payoutTimeFrom,omitempty"`
-	PayoutTimeTo     string   `json:"payoutTimeTo,omitempty"`
-	UpdateTimeFrom   string   `json:"updateTimeFrom,omitempty"`
-	UpdateTimeTo     string   `json:"updateTimeTo,omitempty"`
-	OnlineOrderID    string   `json:"onlineOrderId,omitempty"`
-	OnlineOrderIDList []string `json:"onlineOrderIdList,omitempty"`
-	FeeName          string   `json:"feeName,omitempty"`
 }
 
 // LazadaReportDTO represents Lazada transaction details.
@@ -130,6 +115,49 @@ type LazadaReportDTO struct {
 	PublicID           string `json:"publicId,omitempty"`
 }
 
+// TiktokReportDTO represents TikTok transaction details.
+type TiktokReportDTO struct {
+	ShopID          int64   `json:"shopId"`
+	ShopName        string  `json:"shopName"`
+	Currency        string  `json:"currency"`
+	OrderID         string  `json:"orderId"`
+	AdjustmentID    string  `json:"adjustmentId,omitempty"`
+	RelatedOrderID  string  `json:"relatedOrderId,omitempty"`
+	SettlementTime  int64   `json:"settlementTime,omitempty"`
+	SettlementTimeFmt string `json:"settlementTimeFormatted,omitempty"`
+	SkuID           string  `json:"skuId,omitempty"`
+	SkuName         string  `json:"skuName,omitempty"`
+	ProductName     string  `json:"productName,omitempty"`
+	UserPay         float64 `json:"userPay,omitempty"`
+	PlatformPromotion float64 `json:"platformPromotion,omitempty"`
+	ShippingFeeSubsidy float64 `json:"shippingFeeSubsidy,omitempty"`
+	Refund          float64 `json:"refund,omitempty"`
+	PaymentFee      float64 `json:"paymentFee,omitempty"`
+	PlatformCommission float64 `json:"platformCommission,omitempty"`
+	AffiliateCommission float64 `json:"affiliateCommission,omitempty"`
+	Vat             float64 `json:"vat,omitempty"`
+	ShippingFee     float64 `json:"shippingFee,omitempty"`
+	SettlementAmount float64 `json:"settlementAmount,omitempty"`
+	UpdateTime      int64   `json:"updateTime,omitempty"`
+	ShopTimeZone    string  `json:"shopTimeZone,omitempty"`
+	PublicID        string  `json:"publicId,omitempty"`
+}
+
+// LazadaReportQuery holds params for Lazada transaction details.
+type LazadaReportQuery struct {
+	Page             int      `json:"page"`
+	PageSize         int      `json:"pageSize"`
+	ShopIDList       []int64  `json:"shopIdList,omitempty"`
+	ShopNameList     []string `json:"shopNameList,omitempty"`
+	PayoutTimeFrom   string   `json:"payoutTimeFrom,omitempty"`
+	PayoutTimeTo     string   `json:"payoutTimeTo,omitempty"`
+	UpdateTimeFrom   string   `json:"updateTimeFrom,omitempty"`
+	UpdateTimeTo     string   `json:"updateTimeTo,omitempty"`
+	OnlineOrderID    string   `json:"onlineOrderId,omitempty"`
+	OnlineOrderIDList []string `json:"onlineOrderIdList,omitempty"`
+	FeeName          string   `json:"feeName,omitempty"`
+}
+
 // QueryLazadaTransaction queries Lazada transaction details.
 func (s *ReportService) QueryLazadaTransaction(params *LazadaReportQuery) ([]LazadaReportDTO, int, error) {
 	biz, _ := json.Marshal(params)
@@ -144,7 +172,7 @@ func (s *ReportService) QueryLazadaTransaction(params *LazadaReportQuery) ([]Laz
 	return list, w.BizContent.Total, nil
 }
 
-// TiktokReportQuery extends ReportPageParams with TikTok-specific filters.
+// TiktokReportQuery holds params for TikTok transaction details.
 type TiktokReportQuery struct {
 	Page             int      `json:"page"`
 	PageSize         int      `json:"pageSize"`
@@ -154,35 +182,6 @@ type TiktokReportQuery struct {
 	PayoutTimeTo     string   `json:"payoutTimeTo"`
 	OnlineOrderID    string   `json:"onlineOrderId,omitempty"`
 	OnlineOrderIDList []string `json:"onlineOrderIdList,omitempty"`
-}
-
-// TiktokReportDTO represents TikTok transaction details.
-type TiktokReportDTO struct {
-	ShopID          int64   `json:"shopId"`
-	ShopName        string  `json:"shopName"`
-	Currency        string  `json:"currency"`
-	OrderID         string  `json:"orderId"`
-	AdjustmentID    string  `json:"adjustmentId,omitempty"`
-	RelatedOrderID  string  `json:"relatedOrderId,omitempty"`
-	SettlementTime  int64   `json:"settlementTime,omitempty"`
-	SkuID           string  `json:"skuId,omitempty"`
-	SkuName         string  `json:"skuName,omitempty"`
-	ProductName     string  `json:"productName,omitempty"`
-	UserPay         float64 `json:"userPay,omitempty"`
-	PlatformPromotion float64 `json:"platformPromotion,omitempty"`
-	ShippingFeeSubsidy float64 `json:"shippingFeeSubsidy,omitempty"`
-	Refund          float64 `json:"refund,omitempty"`
-	PaymentFee      float64 `json:"paymentFee,omitempty"`
-	PlatformCommission float64 `json:"platformCommission,omitempty"`
-	FlatFee         float64 `json:"flatFee,omitempty"`
-	SalesFee        float64 `json:"salesFee,omitempty"`
-	AffiliateCommission float64 `json:"affiliateCommission,omitempty"`
-	Vat             float64 `json:"vat,omitempty"`
-	ShippingFee     float64 `json:"shippingFee,omitempty"`
-	SettlementAmount float64 `json:"settlementAmount,omitempty"`
-	UpdateTime      int64   `json:"updateTime,omitempty"`
-	ShopTimeZone    string  `json:"shopTimeZone,omitempty"`
-	PublicID        string  `json:"publicId,omitempty"`
 }
 
 // QueryTiktokTransaction queries TikTok transaction details.
@@ -199,27 +198,58 @@ func (s *ReportService) QueryTiktokTransaction(params *TiktokReportQuery) ([]Tik
 	return list, w.BizContent.Total, nil
 }
 
-// ShopeePayoutQuery extends ReportPageParams with Shopee payout filters.
+// ----- Shopee Payout -----
+
+// ShopeePayoutQuery holds params for Shopee payout records.
 type ShopeePayoutQuery struct {
-	Page           int      `json:"page"`
-	PageSize       int      `json:"pageSize"`
-	ShopIDList     []int64  `json:"shopIdList,omitempty"`
-	ShopNameList   []string `json:"shopNameList,omitempty"`
-	PayoutTimeFrom string   `json:"payoutTimeFrom"`
-	PayoutTimeTo   string   `json:"payoutTimeTo"`
+	Page              int      `json:"page"`
+	PageSize          int      `json:"pageSize"`
+	ShopIDList        []int64  `json:"shopIdList,omitempty"`
+	ShopNameList      []string `json:"shopNameList,omitempty"`
+	PayoutTimeFrom    string   `json:"payoutTimeFrom"`
+	PayoutTimeTo      string   `json:"payoutTimeTo"`
+	UpdateTimeFrom    string   `json:"updateTimeFrom,omitempty"`
+	UpdateTimeTo      string   `json:"updateTimeTo,omitempty"`
+	Type              string   `json:"type,omitempty"`
+	PayoutStatus      string   `json:"payoutStatus,omitempty"`
+	TransactionType   string   `json:"transactionType,omitempty"`
+	OnlineOrderID     string   `json:"onlineOrderId,omitempty"`
+	OnlineOrderIDList []string `json:"onlineOrderIdList,omitempty"`
 }
 
 // ShopeePayoutDTO represents a Shopee payout record.
 type ShopeePayoutDTO struct {
-	ShopID       int64  `json:"shopId,omitempty"`
-	ShopName     string `json:"shopName,omitempty"`
-	PayoutTime   int64  `json:"payoutTime,omitempty"`
-	Currency     string `json:"currency,omitempty"`
-	Amount       float64 `json:"amount,omitempty"`
-	Status       string `json:"status,omitempty"`
-	Reference    string `json:"reference,omitempty"`
-	UpdateTime   int64  `json:"updateTime,omitempty"`
-	ShopTimeZone string `json:"shopTimeZone,omitempty"`
+	ShopID               int64   `json:"shopId,omitempty"`
+	OnlineShopID         string  `json:"onlineShopId,omitempty"`
+	ShopName             string  `json:"shopName,omitempty"`
+	Platform             string  `json:"platform,omitempty"`
+	SiteCode             string  `json:"siteCode,omitempty"`
+	Currency             string  `json:"currency,omitempty"`
+	Type                 string  `json:"type,omitempty"`
+	PayType              string  `json:"payType,omitempty"`
+	TransactionID        string  `json:"transactionId,omitempty"`
+	PayoutStatus         string  `json:"payoutStatus,omitempty"`
+	TransactionType      string  `json:"transactionType,omitempty"`
+	Amount               float64 `json:"amount,omitempty"`
+	CurrentBalance       float64 `json:"currentBalance,omitempty"`
+	TransactionTime      int64   `json:"transactionTime,omitempty"`
+	TransactionTimeFmt   string  `json:"transactionTimeFormatted,omitempty"`
+	UpdateTime           int64   `json:"updateTime,omitempty"`
+	OrderSN              string  `json:"orderSn,omitempty"`
+	RefundSN             string  `json:"refundSn,omitempty"`
+	WithdrawalType       string  `json:"withdrawalType,omitempty"`
+	TransactionFee       float64 `json:"transactionFee,omitempty"`
+	Description          string  `json:"description,omitempty"`
+	BuyerName            string  `json:"buyerName,omitempty"`
+	WithdrawID           string  `json:"withdrawId,omitempty"`
+	Reason               string  `json:"reason,omitempty"`
+	RootWithdrawalID     string  `json:"rootWithdrawalId,omitempty"`
+	PayoutExchangeCurrency string `json:"payoutExchangeCurrency,omitempty"`
+	PayoutExchangeAmount float64 `json:"payoutExchangeAmount,omitempty"`
+	PayoutExchangeRate   string  `json:"payoutExchangeRate,omitempty"`
+	PayoutPayeeID        string  `json:"payoutPayeeId,omitempty"`
+	ShopTimeZone         string  `json:"shopTimeZone,omitempty"`
+	PublicID             string  `json:"publicId,omitempty"`
 }
 
 // QueryShopeePayout queries Shopee payout records.
@@ -236,22 +266,48 @@ func (s *ReportService) QueryShopeePayout(params *ShopeePayoutQuery) ([]ShopeePa
 	return list, w.BizContent.Total, nil
 }
 
-// LazadaBalanceDTO represents a Lazada balance record.
-type LazadaBalanceDTO struct {
-	ShopID       int64   `json:"shopId,omitempty"`
-	ShopName     string  `json:"shopName,omitempty"`
-	Currency     string  `json:"currency,omitempty"`
-	Balance      float64 `json:"balance,omitempty"`
-	UpdateTime   int64   `json:"updateTime,omitempty"`
-	ShopTimeZone string  `json:"shopTimeZone,omitempty"`
+// ----- Lazada Account Transaction -----
+
+// LazadaAccountQuery holds params for Lazada account transaction list.
+type LazadaAccountQuery struct {
+	Page                int      `json:"page"`
+	PageSize            int      `json:"pageSize"`
+	ShopIDList          []int64  `json:"shopIdList,omitempty"`
+	ShopNameList        []string `json:"shopNameList,omitempty"`
+	PayoutTimeFrom      string   `json:"payoutTimeFrom"`
+	PayoutTimeTo        string   `json:"payoutTimeTo"`
+	UpdateTimeFrom      string   `json:"updateTimeFrom,omitempty"`
+	UpdateTimeTo        string   `json:"updateTimeTo,omitempty"`
+	TransactionNumberList []string `json:"transactionNumberList,omitempty"`
+	TypeList            []string `json:"typeList,omitempty"`
 }
 
-// QueryLazadaBalance queries Lazada my balance.
-func (s *ReportService) QueryLazadaBalance(params *ReportPageParams) ([]LazadaBalanceDTO, int, error) {
+// LazadaAccountTransactionDTO represents a Lazada account transaction record.
+type LazadaAccountTransactionDTO struct {
+	CustomerID       int64  `json:"customerId,omitempty"`
+	ShopID           int64  `json:"shopId,omitempty"`
+	OnlineShopID     string `json:"onlineShopId,omitempty"`
+	SiteCode         string `json:"siteCode,omitempty"`
+	TransactionNumber string `json:"transactionNumber,omitempty"`
+	TransactionTime  int64  `json:"transactionTime,omitempty"`
+	TransactionTimeFmt string `json:"transactionTimeFormatted,omitempty"`
+	Type             string `json:"type,omitempty"`
+	SubType          string `json:"subType,omitempty"`
+	Amount           float64 `json:"amount,omitempty"`
+	Currency         string `json:"currency,omitempty"`
+	Remarks          string `json:"remarks,omitempty"`
+	PayeeAccount     string `json:"payeeAccount,omitempty"`
+	PayeeDescription string `json:"payeeDescription,omitempty"`
+	ShopTimeZone     string `json:"shopTimeZone,omitempty"`
+	PublicID         string `json:"publicId,omitempty"`
+}
+
+// QueryLazadaAccountTransaction queries Lazada account transaction list.
+func (s *ReportService) QueryLazadaAccountTransaction(params *LazadaAccountQuery) ([]LazadaAccountTransactionDTO, int, error) {
 	biz, _ := json.Marshal(params)
-	var list []LazadaBalanceDTO
+	var list []LazadaAccountTransactionDTO
 	w := &ResponseWrapper{Result: &list}
-	if err := s.client.Do("QUERY_LAZADA_MY_BALANCE", string(biz), w); err != nil {
+	if err := s.client.Do("QUERY_LAZADA_ACCOUNT_TRANSACTION_LIST", string(biz), w); err != nil {
 		return nil, 0, err
 	}
 	if w.HasError() {
@@ -260,24 +316,44 @@ func (s *ReportService) QueryLazadaBalance(params *ReportPageParams) ([]LazadaBa
 	return list, w.BizContent.Total, nil
 }
 
+// ----- TikTok V2 Transaction -----
+
+// TiktokV2ReportQuery holds params for TikTok V2 transaction details.
+type TiktokV2ReportQuery struct {
+	Page             int      `json:"page"`
+	PageSize         int      `json:"pageSize"`
+	ShopIDList       []int64  `json:"shopIdList,omitempty"`
+	ShopNameList     []string `json:"shopNameList,omitempty"`
+	PayoutTimeFrom   string   `json:"payoutTimeFrom"`
+	PayoutTimeTo     string   `json:"payoutTimeTo"`
+	OnlineOrderIDList []string `json:"onlineOrderIdList,omitempty"`
+}
+
 // TiktokV2ReportDTO represents a TikTok V2 transaction detail.
 type TiktokV2ReportDTO struct {
 	ShopID          int64   `json:"shopId,omitempty"`
 	ShopName        string  `json:"shopName,omitempty"`
 	Currency        string  `json:"currency,omitempty"`
 	OrderID         string  `json:"orderId,omitempty"`
+	OrderType       string  `json:"orderType,omitempty"`
+	OrderStatus     string  `json:"orderStatus,omitempty"`
 	SettlementTime  int64   `json:"settlementTime,omitempty"`
-	PaymentAmount   float64 `json:"paymentAmount,omitempty"`
+	ProductAmount   float64 `json:"productAmount,omitempty"`
+	ShippingAmount  float64 `json:"shippingAmount,omitempty"`
+	PlatformFee     float64 `json:"platformFee,omitempty"`
+	TransactionFee  float64 `json:"transactionFee,omitempty"`
 	Commission      float64 `json:"commission,omitempty"`
-	ShippingFee     float64 `json:"shippingFee,omitempty"`
+	AffiliateFee    float64 `json:"affiliateFee,omitempty"`
 	Refund          float64 `json:"refund,omitempty"`
+	NetAmount       float64 `json:"netAmount,omitempty"`
 	SettlementAmount float64 `json:"settlementAmount,omitempty"`
 	UpdateTime      int64   `json:"updateTime,omitempty"`
 	ShopTimeZone    string  `json:"shopTimeZone,omitempty"`
+	PublicID        string  `json:"publicId,omitempty"`
 }
 
 // QueryTiktokV2Transaction queries TikTok V2 transaction details.
-func (s *ReportService) QueryTiktokV2Transaction(params *TiktokReportQuery) ([]TiktokV2ReportDTO, int, error) {
+func (s *ReportService) QueryTiktokV2Transaction(params *TiktokV2ReportQuery) ([]TiktokV2ReportDTO, int, error) {
 	biz, _ := json.Marshal(params)
 	var list []TiktokV2ReportDTO
 	w := &ResponseWrapper{Result: &list}
@@ -290,21 +366,40 @@ func (s *ReportService) QueryTiktokV2Transaction(params *TiktokReportQuery) ([]T
 	return list, w.BizContent.Total, nil
 }
 
+// ----- TikTok Payout -----
+
+// TiktokPayoutQuery holds params for TikTok payout records.
+type TiktokPayoutQuery struct {
+	Page             int      `json:"page"`
+	PageSize         int      `json:"pageSize"`
+	ShopIDList       []int64  `json:"shopIdList,omitempty"`
+	ShopNameList     []string `json:"shopNameList,omitempty"`
+	PayoutTimeFrom   string   `json:"payoutTimeFrom"`
+	PayoutTimeTo     string   `json:"payoutTimeTo"`
+}
+
 // TiktokPayoutDTO represents a TikTok payout record.
 type TiktokPayoutDTO struct {
-	ShopID       int64   `json:"shopId,omitempty"`
-	ShopName     string  `json:"shopName,omitempty"`
-	Currency     string  `json:"currency,omitempty"`
-	PayoutTime   int64   `json:"payoutTime,omitempty"`
-	Amount       float64 `json:"amount,omitempty"`
-	Status       string  `json:"status,omitempty"`
-	Reference    string  `json:"reference,omitempty"`
-	UpdateTime   int64   `json:"updateTime,omitempty"`
-	ShopTimeZone string  `json:"shopTimeZone,omitempty"`
+	ShopID            int64   `json:"shopId,omitempty"`
+	OnlineShopID      string  `json:"onlineShopId,omitempty"`
+	ShopName          string  `json:"shopName,omitempty"`
+	Currency          string  `json:"currency,omitempty"`
+	PayoutTime        int64   `json:"payoutTime,omitempty"`
+	PayoutTimeFmt     string  `json:"payoutTimeFormatted,omitempty"`
+	TransactionID     string  `json:"transactionId,omitempty"`
+	TransactionType   string  `json:"transactionType,omitempty"`
+	Amount            float64 `json:"amount,omitempty"`
+	Balance           float64 `json:"balance,omitempty"`
+	Status            string  `json:"status,omitempty"`
+	Reference         string  `json:"reference,omitempty"`
+	Remark            string  `json:"remark,omitempty"`
+	UpdateTime        int64   `json:"updateTime,omitempty"`
+	ShopTimeZone      string  `json:"shopTimeZone,omitempty"`
+	PublicID          string  `json:"publicId,omitempty"`
 }
 
 // QueryTiktokPayout queries TikTok payout records.
-func (s *ReportService) QueryTiktokPayout(params *ReportPageParams) ([]TiktokPayoutDTO, int, error) {
+func (s *ReportService) QueryTiktokPayout(params *TiktokPayoutQuery) ([]TiktokPayoutDTO, int, error) {
 	biz, _ := json.Marshal(params)
 	var list []TiktokPayoutDTO
 	w := &ResponseWrapper{Result: &list}
@@ -317,7 +412,9 @@ func (s *ReportService) QueryTiktokPayout(params *ReportPageParams) ([]TiktokPay
 	return list, w.BizContent.Total, nil
 }
 
-// InventoryDailyReportQuery holds params for inventory daily report.
+// ----- Inventory Daily Report -----
+
+// InventoryDailyReportQuery holds params for inventory daily statement.
 type InventoryDailyReportQuery struct {
 	Page       int      `json:"page"`
 	PageSize   int      `json:"pageSize"`
@@ -328,15 +425,16 @@ type InventoryDailyReportQuery struct {
 
 // InventoryDailyReportDTO represents an inventory daily statement record.
 type InventoryDailyReportDTO struct {
-	Sku         string `json:"sku,omitempty"`
-	SkuName     string `json:"skuName,omitempty"`
-	Warehouse   string `json:"warehouse,omitempty"`
-	Date        string `json:"date,omitempty"`
-	BeginQty    int64  `json:"beginQty,omitempty"`
-	InQty       int64  `json:"inQty,omitempty"`
-	OutQty      int64  `json:"outQty,omitempty"`
-	EndQty      int64  `json:"endQty,omitempty"`
-	UpdateTime  int64  `json:"updateTime,omitempty"`
+	Sku                  string `json:"sku,omitempty"`
+	SkuName              string `json:"skuName,omitempty"`
+	WarehouseName        string `json:"warehouseName,omitempty"`
+	Date                 string `json:"date,omitempty"`
+	BeginQuantity        int64  `json:"beginQuantity,omitempty"`
+	InQuantity           int64  `json:"inQuantity,omitempty"`
+	OutQuantity          int64  `json:"outQuantity,omitempty"`
+	EndQuantity          int64  `json:"endQuantity,omitempty"`
+	AdjustmentQuantity   int64  `json:"adjustmentQuantity,omitempty"`
+	UpdateTime           int64  `json:"updateTime,omitempty"`
 }
 
 // QueryInventoryDailyReport queries inventory daily statement.

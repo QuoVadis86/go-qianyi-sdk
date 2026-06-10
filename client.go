@@ -200,7 +200,7 @@ func endpointForService(serviceType string) string {
 		"QUERY_LAZADA_TRANSACTION_DETAIL_LIST": "report",
 		"QUERY_TIKTOK_TRANSACTION_DETAIL_LIST": "report",
 		"QUERY_SHOPEE_PAYOUT_DETAIL_LIST":      "report",
-		"QUERY_LAZADA_MY_BALANCE":              "report",
+		"QUERY_LAZADA_ACCOUNT_TRANSACTION_LIST":  "report",
 		"QUERY_TIKTOK_V2_TRANSACTION_DETAIL_LIST": "report",
 		"QUERY_TIKTOK_PAYOUT_RECORD":           "report",
 		"QUERY_INVENTORY_DAILY_REPORT":         "report",
