@@ -388,16 +388,18 @@ type AsnSkuItem struct {
 
 // OdoOrder represents an outbound delivery order in QERP.
 type OdoOrder struct {
-	Number        string       `json:"number"`
-	CustomNumber  string       `json:"customNumber,omitempty"`
-	TrackNumber   string       `json:"trackNumber,omitempty"`
-	WarehouseName string       `json:"warehouseName"`
-	Type          string       `json:"type"`
-	Status        string       `json:"status"`
-	Remark        string       `json:"remark,omitempty"`
-	CreateTime    string       `json:"createTime"`
-	FinishTime    string       `json:"finishTime,omitempty"`
-	OdoSkuVOList  []OdoSkuItem `json:"odoSkuVOList,omitempty"`
+	Number          string        `json:"number"`
+	CustomNumber    string        `json:"customNumber,omitempty"`
+	TrackNumber     string        `json:"trackNumber,omitempty"`
+	WarehouseName   string        `json:"warehouseName"`
+	Type            string        `json:"type"`
+	Status          string        `json:"status"`
+	Remark          string        `json:"remark,omitempty"`
+	CreateTime      string        `json:"createTime"`
+	FinishTime      string        `json:"finishTime,omitempty"`
+	ShippingMethod  string        `json:"shippingMethod,omitempty"`
+	OdoSkuVOList    []OdoSkuItem  `json:"odoSkuVOList,omitempty"`
+	OdoCustomFieldValueList []CustomField `json:"odoCustomFieldValueVOList,omitempty"`
 }
 
 // OdoSkuItem represents a SKU line within an outbound order.
