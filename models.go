@@ -441,22 +441,30 @@ type AdjustmentSku struct {
 
 // PurchaseOrder represents a purchase order in QERP.
 type PurchaseOrder struct {
-	PurchaseNumber     string             `json:"purchaseNumber"`
-	AsnNumber          string             `json:"asnNumber,omitempty"`
-	CustomNumber       string             `json:"customNumber,omitempty"`
-	WarehouseName      string             `json:"warehouseName"`
-	PurchaseType       string             `json:"purchaseType"`
-	SupplierName       string             `json:"supplierName"`
-	SettlementType     string             `json:"settlementType"`
-	PurchasePriceUnit  string             `json:"purchasePriceUnit"`
-	PaymentType        string             `json:"paymentType"`
-	TransportParty     string             `json:"transportParty"`
-	TransportMode      string             `json:"transportMode"`
-	Status             string             `json:"status"`
-	CreateTime         string             `json:"createTime"`
-	UpdateTime         string             `json:"updateTime"`
-	Remark             string             `json:"remark,omitempty"`
-	SkuList            []PurchaseSkuItem  `json:"skuList,omitempty"`
+	PurchaseNumber        string             `json:"purchaseNumber"`
+	AsnNumber             string             `json:"asnNumber,omitempty"`
+	CustomNumber          string             `json:"customNumber,omitempty"`
+	WarehouseName         string             `json:"warehouseName"`
+	TransferWarehouseName string             `json:"transferWarehouseName,omitempty"`
+	PurchaseType          string             `json:"purchaseType"`
+	PurchaseMode          string             `json:"purchaseMode,omitempty"`
+	SupplierName          string             `json:"supplierName"`
+	SettlementType        string             `json:"settlementType"`
+	PurchasePriceUnit     string             `json:"purchasePriceUnit"`
+	PaymentType           string             `json:"paymentType"`
+	TransportParty        string             `json:"transportParty"`
+	TransportMode         string             `json:"transportMode"`
+	Status                string             `json:"status"`
+	PrepayRate            float64            `json:"prepayRate,omitempty"`
+	ShippingCost          float64            `json:"shippingCost,omitempty"`
+	CompanyName           string             `json:"companyName,omitempty"`
+	BuyerTitle            string             `json:"buyerTitle,omitempty"`
+	OrderTime             string             `json:"orderTime,omitempty"`
+	PreReceiveTime        string             `json:"preReceiveTime,omitempty"`
+	CreateTime            string             `json:"createTime"`
+	UpdateTime            string             `json:"updateTime"`
+	Remark                string             `json:"remark,omitempty"`
+	SkuList               []PurchaseSkuItem  `json:"skuList,omitempty"`
 }
 
 // PurchaseSkuItem represents a SKU line within a purchase order.
